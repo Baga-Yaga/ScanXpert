@@ -1,0 +1,134 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    background-color: #20364ffc;
+
+}
+
+#navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    color: white;
+}
+
+#navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+#navbar h4{
+    font-size: 26px;
+
+}
+
+#img-logo {
+    width: 70px;
+    height: 70px;
+    margin-right: 10px;
+}
+
+#navbar-right ul {
+    list-style: none;
+    display: flex; 
+    gap: 20px; 
+}
+
+#navbar-right li {
+    display: inline-block;
+}
+
+#navbar-right li a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+#navbar-right li a:hover {
+    color: #ff4500;
+}
+
+.main{
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding: 20px;
+    
+}
+
+.div1 {
+    width: 30%; 
+    text-align: left;
+    margin-right: 10px;
+}
+
+
+.div2 {
+    width: 50%; 
+    height: 200px; 
+    margin-left: 10px;
+}
+
+.div1 >p{
+    font-family: 'Times New Roman', Times, serif;
+    margin-left: 150px;
+    font-size: 30px;
+    margin-top: 30px;
+    color: aliceblue;
+}
+
+#heading{
+    margin-left: 150px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 50px;
+    margin-top: 130px;
+    color: aliceblue;
+}
+.div1 ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-left: 150px;
+    margin-top: 30px;
+    font-size: 20px;
+    color: aliceblue;
+    
+}
+
+.div1 ul li{
+    margin: 5px;
+}
+.div1 button {
+    margin-top: 20px;
+    margin-left: 280px;
+    padding: 5px 15px;  
+    font-size: 22px;
+    border-radius: 8px;
+    border: 2px solid transparent; 
+    background-color: aquamarine;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.div1 button:hover {
+    background-color: #20c997; 
+    border-color: #198754;
+    color: white; 
+}
+
+#kali {
+    display: block;
+    width: 880px;
+    height: 680px;
+    margin:  auto;
+    margin-bottom: 50px;
+    position: relative;
+    top: -180px;
+}
