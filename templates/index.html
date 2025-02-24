@@ -7,52 +7,69 @@
     <link rel="stylesheet" href="../static/index.css">
 </head>
 <body>
-     <nav id="navbar">
+    <nav id="navbar">
         <div id="navbar-left">
             <img src="../static/logo.png" alt="logo" id="img-logo">
             <h4>Scan<span style="color: red;">X</span>pert</h4>
-
         </div>
 
         <div id="navbar-right">
             <ul>
-                <li><a href="#">Subdomain Enumeration</a></li>
-                <li><a href="#">Network Scan</a></li>
-                <li><a href="#">Fuzzing</a></li>
-                <li><a href="#">Host Discovery</a></li>
-                <li><a href="#">Google Dorking</a></li>
-                <li><a href="#">About</a></li>
+                <li><a href="#" class="tool-link" data-tool="subdomain">Subdomain Enumeration</a></li>
+                <li><a href="#" class="tool-link" data-tool="network">Network Scan</a></li>
+                <li><a href="#" class="tool-link" data-tool="fuzzing">Fuzzing</a></li>
+                <li><a href="#" class="tool-link" data-tool="host">Host Discovery</a></li>
+                <li><a href="#" class="tool-link" data-tool="dorking">Google Dorking</a></li>
+                <li><a href="#" class="tool-link" data-tool="about">About</a></li>
             </ul>
-            
         </div>
     </nav>
 
     <div class="main">
         <div class="div1">
             <h1 id="heading">Uncover Hidden Vulnerabilities Before They Exploit You</h1>
-                <p>Our ScanXpert Platform empowers penetration testers and developers...</p>
-                <ul>
-                    <li>✅ Automate Attack Surface Mapping</li>
-                    <li>✅ Scan for Critical Vulnerabilities</li>
-                    <li>✅ Assess Real-World Risks</li>
-                    <li>✅ Generate Reports in Minutes</li>
-                </ul>
-
-                <button>Hack Smarter</button>
+            <p>Our ScanXpert Platform empowers penetration testers and developers...</p>
+            <ul>
+                <li>✅ Automate Attack Surface Mapping</li>
+                <li>✅ Scan for Critical Vulnerabilities</li>
+                <li>✅ Assess Real-World Risks</li>
+                <li>✅ Generate Reports in Minutes</li>
+            </ul>
+            <button>Hack Smarter</button>
         </div>
-
 
         <div class="div2">
-
             <img src="../static/photo_2025-02-19_23-59-41.jpg" alt="" id="kali">
-            
-
-
         </div>
-
     </div>
 
- 
+    <!-- 🔽 Tool Sections - Initially Hidden -->
+    <div class="tool-section" id="subdomain">
+        
+    </div>
+
+    <div class="tool-section" id="network">
+        
+    </div>
+
+    <div class="tool-section" id="fuzzing">
+        
+    </div>
+
+    <div class="tool-section" id="host">
+        
+    </div>
+
+    <div class="tool-section" id="dorking">
+        
+        
+    </div>
     
+
+    <div class="tool-section" id="about">
+        
+    </div>
+
 </body>
+
 </html>

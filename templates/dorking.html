@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Dorking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #1b1b1b;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Left Side */
+        .left {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .left img {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        /* Right Side */
+        .right {
+            width: 50%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-section {
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.2);
+            color: black;
+        }
+
+        .input-section input, .input-section select, .input-section button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .input-section button {
+            background: #00bcd4;
+            color: white;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+
+        .input-section button:hover {
+            background: #0097a7;
+        }
+
+        /* Results Table */
+        .results {
+            width: 100%;
+            margin-top: 20px;
+            display: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #00bcd4;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <img src="../static/dork.png" alt="Google Dork Logo">
+            <h1 style="margin-bottom: 10px;">Google Hacking</h1>
+            <p>
+                Google Dorking is a hacking technique that uses advanced Google search queries 
+                to find sensitive information exposed on public websites. 
+                It helps ethical hackers and security researchers discover vulnerabilities 
+                by filtering indexed pages with special search operators.
+            </p>
+        </div>
+
+        <div class="right">
+            <div class="input-section">
+                <input type="text" id="domainInput" placeholder="Enter Domain Name">
+                <select id="dorkSelect">
+                    <option value="">Select Dork Category</option>
+                    <option value="site:">Footholds</option>
+                    <option value="intitle:">Files Containing Usernames</option>
+                    <option value="inurl:">Sensitive Directories</option>
+                    <option value="ext:">Vulnerable Files</option>
+                    <option value="intext:">Files Containing Passwords</option>
+                    <option value="filetype:">Sensitive Online Shopping Info</option>
+                    <option value="link:">Pages Containing Login Portals</option>
+                    <option value="cache:">Various Online Devices</option>
+                </select>
+                <button onclick="performDorkSearch()">Search</button>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results" id="resultsSection">
+                <h3>Search Results</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Google Dork Query</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTable">
+                        <!-- Dynamic Results Will Appear Here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function performDorkSearch() {
+            let domain = document.getElementById("domainInput").value.trim();
+            let dork = document.getElementById("dorkSelect").value;
+
+            if (domain === "" || dork === "") {
+                alert("Please enter a domain and select a category.");
+                return;
+            }
+
+            let query = `${dork}${domain}`;
+            let googleSearchURL = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+
+            let resultTable = document.getElementById("resultsTable");
+            let newRow = `<tr>
+                            <td>${query}</td>
+                            <td><a href="${googleSearchURL}" target="_blank">View Results</a></td>
+                          </tr>`;
+
+            resultTable.innerHTML += newRow;
+            document.getElementById("resultsSection").style.display = "block";
+        }
+    </script>
+</body>
+</html>
