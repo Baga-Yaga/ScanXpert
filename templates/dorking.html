@@ -1,194 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Dorking</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
 
         body {
-            background: #1b1b1b;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background-color: #0a0a0a;
+            color: #0ff;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
-        .container {
-            display: flex;
-            width: 90%;
-            max-width: 1200px;
-            height: 80vh;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
-        }
-
-        /* Left Side */
-        .left {
-            width: 50%;
+        .dashboard {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             padding: 20px;
+        }
+
+        header {
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            background: linear-gradient(90deg, #00ffcc, #0099ff);
+            box-shadow: 0 0 20px #00ffff;
+            border-radius: 10px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: #0a0a0a;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-gap: 20px;
+            margin-top: 20px;
+            width: 90%;
+        }
+
+        .screen {
+            grid-column: span 3;
+            background: black;
+            border: 2px solid #00ffcc;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px #00ffcc;
+        }
+
+        .side-panel,
+        .controls,
+        .advanced-filters,
+        .logs,
+        .ai-suggestions,
+        .query-history,
+        .export-options {
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #00ffff;
+        }
+
+        h2 {
+            color: #00ffff;
             text-align: center;
         }
 
-        .left img {
-            width: 150px;
-            margin-bottom: 20px;
-        }
-
-        /* Right Side */
-        .right {
-            width: 50%;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .input-section {
-            width: 100%;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.2);
-            color: black;
-        }
-
-        .input-section input, .input-section select, .input-section button {
+        button {
             width: 100%;
             padding: 10px;
-            margin: 10px 0;
-            font-size: 18px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .input-section button {
-            background: #00bcd4;
-            color: white;
+            background: black;
+            border: 2px solid #00ffcc;
+            color: #00ffcc;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
             cursor: pointer;
-            border: none;
-            font-weight: bold;
-        }
-
-        .input-section button:hover {
-            background: #0097a7;
-        }
-
-        /* Results Table */
-        .results {
-            width: 100%;
-            margin-top: 20px;
-            display: none;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
             margin-top: 10px;
-            background: white;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #00ffcc;
             color: black;
-            border-radius: 5px;
-            overflow: hidden;
+            box-shadow: 0 0 15px #00ffcc;
         }
 
-        table, th, td {
-            border: 1px solid #ddd;
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            background: black;
+            border: 2px solid #00ffcc;
+            color: #00ffcc;
+            font-family: 'Orbitron', sans-serif;
+            margin-top: 5px;
         }
 
-        th, td {
-            padding: 10px;
-            text-align: left;
+        textarea {
+            resize: none;
         }
 
-        th {
-            background: #00bcd4;
-            color: white;
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            background: black;
+            padding: 5px;
+            margin-top: 5px;
+            border: 1px solid #00ffcc;
+            text-align: center;
+        }
+
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc;
+            }
+
+            50% {
+                text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+            }
+
+            100% {
+                text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc;
+            }
+        }
+
+        h1,
+        h2 {
+            animation: glow 1.5s infinite alternate;
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="left">
-            <img src="../static/dork.png" alt="Google Dork Logo">
-            <h1 style="margin-bottom: 10px;">Google Hacking</h1>
-            <p>
-                Google Dorking is a hacking technique that uses advanced Google search queries 
-                to find sensitive information exposed on public websites. 
-                It helps ethical hackers and security researchers discover vulnerabilities 
-                by filtering indexed pages with special search operators.
-            </p>
-        </div>
-
-        <div class="right">
-            <div class="input-section">
-                <input type="text" id="domainInput" placeholder="Enter Domain Name">
-                <select id="dorkSelect">
-                    <option value="">Select Dork Category</option>
-                    <option value="site:">Footholds</option>
-                    <option value="intitle:">Files Containing Usernames</option>
-                    <option value="inurl:">Sensitive Directories</option>
-                    <option value="ext:">Vulnerable Files</option>
-                    <option value="intext:">Files Containing Passwords</option>
-                    <option value="filetype:">Sensitive Online Shopping Info</option>
-                    <option value="link:">Pages Containing Login Portals</option>
-                    <option value="cache:">Various Online Devices</option>
-                </select>
-                <button onclick="performDorkSearch()">Search</button>
+    <div class="dashboard">
+        <header>
+            <h1>Google Dorking Control Panel</h1>
+        </header>
+        <div class="grid-layout">
+            <div class="screen">
+                <p id="query-display">SELECT A DORKING OPTION</p>
             </div>
-
-            <!-- Results Section -->
-            <div class="results" id="resultsSection">
-                <h3>Search Results</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Google Dork Query</th>
-                            <th>Result</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resultsTable">
-                        <!-- Dynamic Results Will Appear Here -->
-                    </tbody>
-                </table>
+            <div class="side-panel">
+                <h2>Quick Tools</h2>
+                <button class="quick-btn">SQL Database Search</button>
+                <button class="quick-btn">Open Directory Search</button>
+                <button class="quick-btn">Sensitive Files</button>
+                <button class="quick-btn">Camera Feeds</button>
+                <button class="quick-btn">Subdomain Enumeration</button>
+                <button class="quick-btn">Credential Leak Search</button>
+            </div>
+            <div class="controls">
+                <h2>Dork Generator</h2>
+                <label for="dork-type">Dork Type:</label>
+                <select id="dork-type">
+                    <option value="filetype">File Type Search</option>
+                    <option value="inurl">Admin Login Finder</option>
+                    <option value="intitle">Index Page Search</option>
+                    <option value="ext">Sensitive File Search</option>
+                    <option value="site">Specific Website Search</option>
+                    <option value="cache">Cached Page Lookup</option>
+                </select>
+                <input type="text" id="custom-input" placeholder="Enter additional parameters...">
+                <button class="generate-btn">Generate Query</button>
+            </div>
+            <div class="advanced-filters">
+                <h2>Advanced Filters</h2>
+                <label><input type="checkbox"> Exclude Specific Sites</label>
+                <label><input type="checkbox"> Search within a Time Range</label>
+                <label><input type="checkbox"> Find Login Pages</label>
+                <label><input type="checkbox"> Filter Out Duplicates</label>
+            </div>
+            <div class="logs">
+                <h2>Search Logs</h2>
+                <ul id="log-list">
+                    <li>Previous searches will appear here...</li>
+                </ul>
+            </div>
+            <div class="ai-suggestions">
+                <h2>AI Suggestions</h2>
+                <p>Let AI analyze and suggest best dorks based on your target.</p>
+                <button class="ai-btn">Generate AI Query</button>
+            </div>
+            <div class="query-history">
+                <h2>Query History</h2>
+                <textarea id="query-history" rows="5" readonly></textarea>
+            </div>
+            <div class="export-options">
+                <h2>Export Options</h2>
+                <button class="export-btn">Export as TXT</button>
+                <button class="export-btn">Export as JSON</button>
             </div>
         </div>
     </div>
-
-    <script>
-        function performDorkSearch() {
-            let domain = document.getElementById("domainInput").value.trim();
-            let dork = document.getElementById("dorkSelect").value;
-
-            if (domain === "" || dork === "") {
-                alert("Please enter a domain and select a category.");
-                return;
-            }
-
-            let query = `${dork}${domain}`;
-            let googleSearchURL = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-
-            let resultTable = document.getElementById("resultsTable");
-            let newRow = `<tr>
-                            <td>${query}</td>
-                            <td><a href="${googleSearchURL}" target="_blank">View Results</a></td>
-                          </tr>`;
-
-            resultTable.innerHTML += newRow;
-            document.getElementById("resultsSection").style.display = "block";
-        }
-    </script>
 </body>
+
 </html>
