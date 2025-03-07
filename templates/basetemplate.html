@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock title %}</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Courier New', monospace;
+      background: url('https://source.unsplash.com/1600x900/?cyberpunk,hacking,technology') no-repeat center center fixed;
+      background-size: cover;
+      background: rgba(0, 0, 0, 0.8);
+      color: #0f0;
+      text-shadow: 0 0 5px #0f0;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 5px 30px;
+      box-shadow: 0 0 10px #0f0;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-left img {
+      height: 70px;
+      margin-right: 10px;
+    }
+
+    .navbar-left h4 {
+      margin: 0;
+      font-size: 24px;
+      color: #0f0;
+    }
+
+    .navbar-left h4 span {
+      color: red;
+    }
+
+    .navbar-right {
+      display: flex;
+    }
+
+    .navbar a {
+      color: #0f0;
+      text-decoration: none;
+      padding: 10px 20px;
+      margin: 0 10px;
+      font-weight: bold;
+      transition: 0.3s;
+      position: relative;
+    }
+
+    .navbar a:hover {
+      color: #fff;
+      text-shadow: 0 0 10px #0f0;
+    }
+
+    .navbar a::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -5px;
+      width: 0;
+      height: 3px;
+      background: #0f0;
+      transition: 0.3s;
+    }
+
+    .navbar a:hover::after {
+      width: 100%;
+      left: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 10px;
+      padding: 20px;
+    }
+    
+    
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-left">
+      <img src="../static/logo1.png" id="myImage" alt="logo">
+    </div>
+    <div class="navbar-right">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/subdomain_enum">Subdomain Enum</a>
+      <a href="/network_scan">Network Fuzzer</a>
+      <a href="/url-fuzzer">URL Fuzzer</a>
+      <a href="/google-dorking">Google Dorking</a>
+      <a href="/bug-scanner">Bug Scanner</a>
+      <a href="/host-discovery">Host Discovery</a>
+      <a href="/about">About</a>
+    </div>
+  </nav>
+  <script>
+    document.getElementById("myImage").onclick = function() {
+        window.location.href = "/"; // Redirect URL
+    };
+</script>
+
+
+  <div class="container">
+    {% block content %} 
+    
+    {% endblock content %}
+  </div>
+</body>
+</html>
