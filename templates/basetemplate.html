@@ -13,7 +13,7 @@
       background-size: cover;
       background: rgba(0, 0, 0, 0.8);
       color: #0f0;
-      text-shadow: 0 0 5px #0f0;
+      text-shadow: 0 0 2px #0f0;
     }
 
     .navbar {
@@ -22,7 +22,8 @@
       justify-content: space-between;
       background: rgba(0, 0, 0, 0.8);
       padding: 5px 30px;
-      box-shadow: 0 0 10px #0f0;
+      box-shadow: 0 0 7px #0f0;
+      position: relative;
     }
 
     .navbar-left {
@@ -33,57 +34,41 @@
     .navbar-left img {
       height: 70px;
       margin-right: 10px;
-    }
-
-    .navbar-left h4 {
-      margin: 0;
-      font-size: 24px;
-      color: #0f0;
-    }
-
-    .navbar-left h4 span {
-      color: red;
+      cursor: pointer;
     }
 
     .navbar-right {
       display: flex;
+      position: relative;
+      padding-bottom: 10x;
+      align-items: flex-end;
     }
 
     .navbar a {
       color: #0f0;
       text-decoration: none;
-      padding: 10px 20px;
-      margin: 0 10px;
+      padding: 5px 15px;
+      margin: 0 5px;
       font-weight: bold;
       transition: 0.3s;
       position: relative;
+      z-index: 2;
     }
 
     .navbar a:hover {
       color: #fff;
-      text-shadow: 0 0 10px #0f0;
+      text-shadow: 0 0 7px #0f0;
     }
 
-    .navbar a::after {
-      content: '';
+    .navbar-underline {
       position: absolute;
-      left: 50%;
-      bottom: -5px;
-      width: 0;
-      height: 3px;
-      background: #0f0;
-      transition: 0.3s;
-    }
-
-    .navbar a:hover::after {
-      width: 100%;
+      bottom: 0;
       left: 0;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 10px;
-      padding: 20px;
+      height: 25px;
+      background: linear-gradient(to top, rgba(0, 255, 0, 1), rgba(0, 255, 0, 0));
+      transition: all 1s ease;
+      width: 0;
+      z-index: 1;
     }
     
     
@@ -103,11 +88,31 @@
       <a href="/bug-scanner">Bug Scanner</a>
       <a href="/host-discovery">Host Discovery</a>
       <a href="/about">About</a>
+      <div class="navbar-underline"></div>
     </div>
   </nav>
   <script>
+    // Set the active link and move the underline to it
+    window.onload = function() {
+      const currentPath = window.location.pathname;
+      const links = document.querySelectorAll('.navbar a');
+      const underline = document.querySelector('.navbar-underline');
+
+      links.forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+          link.classList.add('active'); // Highlight the active link
+          const rect = link.getBoundingClientRect();
+          const navRect = document.querySelector('.navbar-right').getBoundingClientRect();
+
+          underline.style.width = `${rect.width}px`;
+          underline.style.left = `${rect.left - navRect.left}px`;
+        }
+      });
+    };
+
+    // Clickable logo
     document.getElementById("myImage").onclick = function() {
-        window.location.href = "/"; // Redirect URL
+        window.location.href = "/";
     };
 </script>
 
