@@ -2,35 +2,41 @@
 {% block title %} Network Scanner {% endblock title %}
 
 {% block content %}
+<div class="container">
+    <div class="net_left">
+        <div class="net_form">
+            <input type="text" placeholder="Enter Domain or IP">
+            <form action="/action_page.php">
+                <p>Select:</p>
 
-<h1 id="Heading"> Network Scanner </h1>
-<div class="net_left">
-    
-    <div class="net_form">
-        <input type="text" placeholder="Enter Domain or IP">
-        <form action="/action_page.php">
-            <p>Select:</p>
+                <input type="radio" id="simple" name="fav_scan" value="Simple">
+                <label for="simple">Simple</label><br>
 
-            <input type="radio" id="simple" name="fav_scan" value="Simple">
-            <label for="simple">Simple</label><br>
+                <input type="radio" id="moderate" name="fav_scan" value="Moderate">
+                <label for="moderate">Moderate</label><br>
 
-            <input type="radio" id="moderate" name="fav_scan" value="Moderate">
-            <label for="moderate">Moderate</label><br>
+                <input type="radio" id="deep" name="fav_scan" value="Deep">
+                <label for="deep">Deep</label>
+            </form>
 
-            <input type="radio" id="deep" name="fav_scan" value="Deep">
-            <label for="deep">Deep</label>
-        </form>
+            <button>Scan</button>
+        </div>
 
-        <button>Scan</button>
+        <div class="top-triangle">
+            <img src="../static/hollywood.gif" alt="hollywood.gif">
+        </div>
+        <div class="net_right">
+            <img src="../static/hollywood.gif" alt="hollywood.gif">
+        </div>
     </div>
 
-    <div class="top-triangle">
-        <img src="../static/hollywood.gif" alt="hollywood.gif">
+    <!-- New div that appears to the right of net_left -->
+    <div class="net_cli">
+        <textarea name="cli" id="area_cli">Command Interface</textarea>
     </div>
-    <div class="net_right">
-        <img src="../static/hollywood.gif" alt="hollywood.gif">
-    </div>
-
 </div>
+
+
+
 
 {% endblock content %}
