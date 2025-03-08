@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,7 +41,7 @@
     .navbar-right {
       display: flex;
       position: relative;
-      padding-bottom: 10x;
+      /* padding-bottom: 10x; */
       align-items: flex-end;
     }
 
@@ -53,6 +54,7 @@
       transition: 0.3s;
       position: relative;
       z-index: 2;
+      margin-bottom: -30px;
     }
 
     .navbar a:hover {
@@ -62,18 +64,161 @@
 
     .navbar-underline {
       position: absolute;
-      bottom: 0;
+      bottom: -40px;
       left: 0;
-      height: 25px;
+      height: 40px;
       background: linear-gradient(to top, rgba(0, 255, 0, 1), rgba(0, 255, 0, 0));
       transition: all 1s ease;
       width: 0;
       z-index: 1;
     }
-    
-    
+
+
+
+
+    /* Network Fuzzer Styling */
+    /* Network Fuzzer Styling */
+    .net_left {
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 10px;
+      box-shadow: 0 0 10px #0f0;
+      width: 55%;
+      margin: 30px 0 30px 50px;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      /* Pushes form left, GIF right */
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      height: 350px;
+    }
+
+    /* Styling for the form section */
+    .net_form {
+      flex: 1;
+      /* Takes available space on the left */
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 20px;
+
+    }
+
+    .net_form input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      border: 2px solid #0f0;
+      background: black;
+      color: #0f0;
+      font-size: 16px;
+      text-align: center;
+      margin-bottom: 15px;
+      outline: none;
+      box-shadow: 0 0 5px #0f0;
+    }
+
+    /* Proper spacing for radio buttons */
+    .net_form input[type="radio"] {
+      accent-color: #0f0;
+      transform: scale(1.2);
+      margin-right: 5px;
+      /* Adds space between radio buttons and text */
+      margin-bottom: 5px;
+    }
+
+    .net_form label {
+      font-size: 18px;
+      color: #0f0;
+      text-shadow: 0 0 5px #0f0;
+      margin-left: 5px;
+      /* Adds space between label and next radio button */
+    }
+
+    .net_form button {
+      background: black;
+      color: #0f0;
+      border: 2px solid #0f0;
+      padding: 10px 20px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 7px #0f0;
+      margin-top: 10px;
+    }
+
+    .net_form button:hover {
+      background: #0f0;
+      color: black;
+      text-shadow: 0 0 7px black;
+      box-shadow: 0 0 15px #0f0;
+    }
+
+    /* Styling for GIF container */
+    .net_right {
+      padding-left: 20px;
+      /* Adds space between form and GIF */
+      overflow: hidden;
+    }
+
+    .net_right img {
+      width: 550px;
+      /* Adjust size */
+      height: 400px;
+      object-fit: cover;
+      clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+      border-radius: 10px;
+      box-shadow: 0 0 10px #0f0;
+    }
+
+    .top-triangle {
+      position: absolute;
+    }
+
+    .top-triangle img {
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      width: 250px;
+      height: 200px;
+      position: absolute;
+      top: -175px;
+      transform: scale(1.6); /* Increase the scale factor to zoom in */
+      transform-origin: center; 
+      left: 460px;
+
+    }
+
+
+    /* Heading styling */
+    #Heading {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      text-shadow: 0 0 10px #0f0;
+      margin-bottom: 20px;
+    }
+
+    /* Responsive Fixes */
+    @media (max-width: 768px) {
+      .net_left {
+        flex-direction: column;
+        /* Stack items in smaller screens */
+        align-items: center;
+      }
+
+      .net_right {
+        padding-left: 0;
+        margin-top: 20px;
+      }
+
+      .net_right img {
+        /* width: 120px; Reduce size on smaller screens */
+      }
+    }
   </style>
 </head>
+
 <body>
   <nav class="navbar">
     <div class="navbar-left">
@@ -81,19 +226,19 @@
     </div>
     <div class="navbar-right">
       <a href="/dashboard">Dashboard</a>
-      <a href="/subdomain_enum">Subdomain Enum</a>
-      <a href="/network_scan">Network Fuzzer</a>
-      <a href="/url-fuzzer">URL Fuzzer</a>
-      <a href="/google-dorking">Google Dorking</a>
-      <a href="/bug-scanner">Bug Scanner</a>
-      <a href="/host-discovery">Host Discovery</a>
+      <a href="/subdomain_enum">Subdomain_Enum</a>
+      <a href="/network_scan">Network_Fuzzer</a>
+      <a href="/url-fuzzer">URL_Fuzzer</a>
+      <a href="/google-dorking">Google_Dorking</a>
+      <a href="/bug-scanner">Bug_Scanner</a>
+      <a href="/host-discovery">Host_ Discovery</a>
       <a href="/about">About</a>
       <div class="navbar-underline"></div>
     </div>
   </nav>
   <script>
     // Set the active link and move the underline to it
-    window.onload = function() {
+    window.onload = function () {
       const currentPath = window.location.pathname;
       const links = document.querySelectorAll('.navbar a');
       const underline = document.querySelector('.navbar-underline');
@@ -111,16 +256,17 @@
     };
 
     // Clickable logo
-    document.getElementById("myImage").onclick = function() {
-        window.location.href = "/";
+    document.getElementById("myImage").onclick = function () {
+      window.location.href = "/";
     };
-</script>
+  </script>
 
 
   <div class="container">
-    {% block content %} 
-    
+    {% block content %}
+
     {% endblock content %}
   </div>
 </body>
+
 </html>
