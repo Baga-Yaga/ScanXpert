@@ -88,10 +88,10 @@
             return;
         }
 
-        document.getElementById('loading').style.display = 'block';
-        //document.getElementById('results').innerHTML = '';
-        const consoleBox = document.getElementById('consoleOutput');
-        consoleBox.value = "Scanning started...\n";
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').innerHTML = '';
+            const consoleBox = document.getElementById('consoleOutput');
+            consoleBox.value = "Scanning started...\n";
 
         // Start the scan by sending a POST request
         fetch('/start_scan', {
