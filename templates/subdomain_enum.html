@@ -20,15 +20,20 @@
                     <li>Review the subdomain details in the table below.</li>
                 </ul>
             </div>
+            <table class="result-table" id="resultTable">
+                <thead>
+                    <tr>
+                        <th>Subdomain</th>
+                    </tr>
+                </thead>
+                <tbody id="results"></tbody>
+            </table>
         </div>
-
         <div class="right-panel">
             <p><strong>Console Output:</strong></p>
             <textarea id="consoleOutput" readonly></textarea>
         </div>
     </div>
-    
-
     <script>
         function startScan() {
             const domain = document.getElementById('domainInput').value;
