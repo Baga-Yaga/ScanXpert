@@ -42,10 +42,10 @@ body {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px #0f0;
-  margin-bottom: 20px; /* spacing between top and bottom panels */
+  margin-bottom: 20px; 
 }
 
-/* Right Panel (Console) */
+
 .right-panel {
   font-family: monospace;
   background: #000;
