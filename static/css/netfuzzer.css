@@ -6,7 +6,7 @@
     }
 
     .net_left {
-        width: 55%;
+        width: 58%;
         background: rgba(0, 0, 0, 0.8);
         border-radius: 10px;
         box-shadow: 0 0 10px #0f0;
@@ -17,18 +17,17 @@
         position: relative;
         overflow: hidden;
         height: 350px;
-        margin: 30px 0 30px 50px;
+        margin: 30px 0 30px 0px;
     }
     /* Styling for the form section */
     .net_form {
-      flex: 1;
+        flex: 1;
       /* Takes available space on the left */
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 0 20px;
-
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 20px;
     }
 
     .net_form input[type="text"] {
@@ -165,4 +164,4 @@
       /* box-shadow: 0 0 0px #0f0; */
       margin-right: 5px; 
 
-    }
+    }   
