@@ -1,61 +1,53 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template,Response,stream_with_context
+import subprocess
 
-app = Flask(__name__,template_folder='templates')
+app = Flask(__name__,template_folder='templates',static_folder='/',static_url_path='/')
 
 @app.route('/')
 def greet():
 	return render_template('home.html')
 
-@app.route('/welcome/<name>')
-def greet1(name):
-    return f"Welcome, {name}"
-
-@app.route('/add/<int:n1>/<int:n2>')
-def add(n1,n2):
-    return f"{n1} + {n2} = {n1 + n2}"
- 
-@app.route('/hello',methods=['POST','GET'])
-def hello():
-    if request.method == 'GET':
-        return 'This is GET request'
-    elif request.method == 'POST':
-        return 'This is POST request'
-    else:
-        return 'No, man not allowed'
-
-@app.route('/selfintro')
-def signup():
-    # name = request.args['Name']
-    # std = request.args['class']
-    # roll = request.args['roll']
-    info = {"Name":"Atharva Sultanpure", "Class":"TY CSE-C", "Roll":"66"}
-    return render_template('selfinto.html',info=info)
-
-@app.route('/test',methods=['GET'])
-def test():      
-        # isadmin=False
-        if 'name' in request.args.keys() or 'isadmin' in request.args.keys():
-               isadmin = request.args['isadmin']
-               name = request.args.get('name')
-               if isadmin == "yes":
-                   return "Welcome, Admin",200  
-               else:
-                   return f'Welcome, {name}',200
-        else:
-               return f'Give some name broo...',404
-
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
 
+# --------------------------This code block belongs to subdomain enumeration -----------------------
+
 @app.route('/subdomain_enum')
 def subdomain_enum():
     return render_template('subdomain_enum.html')
+
+@app.route('/start_scan', methods=['POST'])
+def start_scan():
+    domain = request.form.get('domain')
+    if not domain:
+        return "No domain provided", 400
+
+    def run_scan(domain):
+        """Generator function to yield live output of the subfinder command."""
+        process = subprocess.Popen(
+            ['subfinder', '-d', domain, '-silent'],  # Run subfinder command
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True
+        )
+
+        # Stream output line by line
+        for line in iter(process.stdout.readline, ''):
+            yield  f"{line.strip()} \n"  
+
+        process.stdout.close()
+        process.wait()
+        yield "[ SCAN COMPLETED ]\n\n"
+
+    return Response(run_scan(domain), mimetype='text/event-stream')
+
+# --------------------------------------------------------------------------------------------------
 
 @app.route('/network_scan')
 def network_scan():
     return render_template('network_scan.html')
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0', port=5555, debug=True)
+	app.run(host='0.0.0.0', port=5000, debug=True)
 
