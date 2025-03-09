@@ -1,116 +1,144 @@
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Courier New', monospace;
-    background: url('https://source.unsplash.com/1600x900/?cyberpunk,hacking,technology') no-repeat center center fixed;
-    background-size: cover;
-    color: #0f0;
-    text-shadow: 0 0 5px #0f0;
-  }
+  margin: 0;
+  padding: 0;
+  font-family: 'Courier New', monospace;
+  background: url('https://source.unsplash.com/1600x900/?cyberpunk,hacking,technology') no-repeat center center fixed;
+  background-size: cover;
+  color: #0f0;
+  text-shadow: 0 0 5px #0f0;
+}
 
-  .container {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-  }
+/* -- NEW LAYOUT: Two Columns -- */
+.outer-container {
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
+}
 
-  .left-panel, .right-panel {
-    background: rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #0f0;
-  }
+.left-col{
+  display: flex;
+  width: 100%;
+  gap: 20px;
+}
+.left-panel{
+  width: 60%;
+}
+.right-panel{
+  width: 40%;
+}
+.right-col{
+  gap: 20px;
+  display: flex;
+  width: 100%;
+  flex-direction: row-reverse;
+}
 
-  .left-panel {
-    width: 42.5%;
-    /* margin: 30px 0 30px 50px; */
-    padding-right: 250px;
-    padding-bottom: 67px;
-  }
+/* Panels (Top Sections) */
+.left-panel,
+.right-panel,
+.results-container,
+.summary-box {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #0f0;
+  margin-bottom: 20px; /* spacing between top and bottom panels */
+}
 
-  .right-panel{
-    margin-right: 10px;
-    width: 40%;
-    height: 400px;
-    overflow-y: auto;
-    font-family: monospace;
-    background: #000;
-    color: #0f0;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: inset 0 0 10px #0f0;
-  }
-  #consoleOutput {
-    width: 95.5%;
-    height: 325px;
-    overflow-y: auto;
-    position:static;
-    font-family: monospace;
-    background: #000;
-    color: #0f0;
-    padding: 15px;
-    border-radius: 5px;
-    /* box-shadow: inset 0 0 10px #0f0; */
-    box-shadow: black;
-    border: #000;
-  }
+/* Right Panel (Console) */
+.right-panel {
+  font-family: monospace;
+  background: #000;
+  color: #0f0;
+  box-shadow: inset 0 0 10px #0f0;
+}
 
-  input[type="text"] {
-    width: 66%;
-    padding: 10px;
-    margin-bottom: 10px;
-    background: #000;
-    color: #0f0;
-    border: 1px solid #0f0;
-  }
+.right-panel textarea {
+  width: 95.5%;
+  height: 325px;
+  overflow-y: auto;
+  background: #000;
+  color: #0f0;
+  padding: 15px;
+  border-radius: 5px;
+  border: none;
+}
 
-  button {
-    width: 69%;
-    padding: 10px;
-    background: #0f0;
-    color: #000;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
-  }
+/* Input and Button */
+input[type="text"] {
+  width: 66%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #000;
+  color: #0f0;
+  border: 1px solid #0f0;
+}
 
-  button:hover {
-    background: red;
-    color: white;
-  }
+button {
+  width: 69%;
+  padding: 10px;
+  background: #0f0;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
 
-  .loading {
-    display: none;
-    text-align: center;
-    padding: 10px;
-  }
+button:hover {
+  background: red;
+  color: white;
+}
 
-  .loading span {
-    display: inline-block;
-    animation: blink 1s infinite;
-  }
+/* Loading Animation */
+.loading {
+  display: none;
+  text-align: center;
+  padding: 10px;
+}
 
-  @keyframes blink {
-    50% { opacity: 0; }
-  }
+.loading span {
+  display: inline-block;
+  animation: blink 1s infinite;
+}
 
-  .result-table {
-    display: none;
-    margin-top: 20px;
-    border-collapse: collapse;
-    width: 100%;
+@keyframes blink {
+  50% {
+    opacity: 0;
   }
+}
 
-  .result-table th, .result-table td {
-    border: 1px solid #0f0;
-    padding: 8px;
-    text-align: left;
-  }
+/* Results Table */
+.results-container {
+  /* Already has styling from above: background, padding, etc. */
+  width: 59%;
+  overflow-y: auto;  /* Scroll if table is large */
+}
 
-  .pagination {
-    text-align: center;
-    margin-top: 10px;
-  }
-/* Table Styles */
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #0f0;
+  margin-top: 10px;
+}
 
+.result-table th,
+.result-table td {
+  border: 1px solid #0f0;
+  padding: 8px;
+  text-align: left;
+}
+
+/* Pagination */
+.pagination {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Summary Box */
+.summary-box {
+  /* Already has background, radius, etc. from above */
+  color: #0f0;
+  font-family: 'Courier New', monospace;
+  width: 39%;
+}

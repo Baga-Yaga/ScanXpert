@@ -1,92 +1,138 @@
 {% extends "basetemplate.html" %}
 {% block title %} Subdomain Enumeration {% endblock title %}
 <link rel="stylesheet" type="text/css" href="../static/css/subdomain.css">
+
 {% block content %}
-    <div class="container">
-        <div class="left-panel">
-            <h2>Subdomain Enumeration</h2>
-            <input type="text" id="domainInput" placeholder="Enter domain...">
-            <button onclick="startScan()">Start Scan</button>
-            <div class="loading" id="loading" style="display: none;">
-                <span>Scanning...</span>
-            </div>
-            <div class="quick-guide">
-                <br><br>
-                <h3>How to Use:</h3>
-                <ul>
-                    <li>Enter the target domain (e.g., example.com) in the input field.</li>
-                    <li>Click "Start Scan" to begin the subdomain enumeration process.</li>
-                    <li>Monitor the console output for real-time results.</li>
-                    <li>Review the subdomain details in the table below.</li>
-                </ul>
-            </div>
-            <table class="result-table" id="resultTable">
-                <thead>
-                    <tr>
-                        <th>Subdomain</th>
-                    </tr>
-                </thead>
-                <tbody id="results"></tbody>
-            </table>
-        </div>
-        <div class="right-panel">
-            <p><strong>Console Output:</strong></p>
-            <textarea id="consoleOutput" readonly></textarea>
-        </div>
+<div class="outer-container">
+  <!-- Left Column -->
+  <div class="left-col">
+    <!-- Top: Subdomain Input Panel -->
+    <div class="left-panel">
+      <h2>Subdomain Enumeration</h2>
+      <input type="text" id="domainInput" placeholder="Enter domain...">
+      <button onclick="startScan()">Start Scan</button>
+      <div class="loading" id="loading" style="display: none;">
+          <span>Scanning...</span>
+      </div>
+      <div class="quick-guide">
+          <br><br>
+          <h3>How to Use:</h3>
+          <ul>
+              <li>Enter the target domain (e.g., example.com) in the input field.</li>
+              <li>Click "Start Scan" to begin the subdomain enumeration process.</li>
+              <li>Monitor the console output for real-time results.</li>
+              <li>Review the subdomain details in the table below.</li>
+          </ul>
+      </div>
     </div>
-    <script>
-        function startScan() {
-            const domain = document.getElementById('domainInput').value;
-            if (!domain) {
-                alert("Please enter a domain!");
-                return;
+
+    <div class="right-panel">
+        <p><strong>Console Output:</strong></p>
+        <textarea id="consoleOutput" readonly></textarea>
+      </div>
+  </div>
+
+  <!-- Right Column -->
+  <div class="right-col">
+    <!-- Top: Console Output -->
+
+
+    <!-- Bottom: Summary Box -->
+    <div class="summary-box">
+      <h3>Scan Summary</h3>
+      <p>Total Subdomains: <span id="totalSubdomains">0</span></p>
+      <p>Live Subdomains: <span id="liveSubdomains">0</span></p>
+      <p>1xx: <span id="status1xx">0</span></p>
+      <p>2xx: <span id="status2xx">0</span></p>
+      <p>3xx: <span id="status3xx">0</span></p>
+      <p>4xx: <span id="status4xx">0</span></p>
+      <p>5xx: <span id="status5xx">0</span></p>
+    </div>
+
+     <!-- Bottom: Results Table -->
+     <div class="results-container">
+        <table class="result-table" id="resultTable">
+          <thead>
+            <tr>
+              <th>Subdomain</th>
+              <th>IP Address</th>
+              <th>Status</th>
+              <th>Ports</th>
+              <th>Technology</th>
+            </tr>
+            <tr>
+                <td>sub1.example.com</td>
+                <td>192.168.1.1</td>
+                <td>80, 443</td>
+                <td><span class="status up">Up</span></td>
+                <td>Nginx, PHP</td>
+            </tr>
+          </thead>
+          <tbody id="resultBody">
+            <!-- Dynamically generated rows go here -->
+          </tbody>
+        </table>
+        <div class="pagination">
+          <button id="prevPage" onclick="changePage(-1)">Prev</button>
+          <span id="pageIndicator"></span>
+          <button id="nextPage" onclick="changePage(1)">Next</button>
+        </div>
+      </div>
+  </div>
+</div>
+<script>
+    function startScan() {
+        const domain = document.getElementById('domainInput').value;
+        if (!domain) {
+            alert("Please enter a domain!");
+            return;
+        }
+
+        document.getElementById('loading').style.display = 'block';
+        //document.getElementById('results').innerHTML = '';
+        const consoleBox = document.getElementById('consoleOutput');
+        consoleBox.value = "Scanning started...\n";
+
+        // Start the scan by sending a POST request
+        fetch('/start_scan', {
+            method: 'POST',
+            body: new URLSearchParams({ 'domain': domain }),
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        })
+        .then(response => {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            function readChunk() {
+                reader.read().then(({ done, value }) => {
+                    if (done) {
+                        document.getElementById('loading').style.display = 'none';
+                        return;
+                    }
+                    const output = decoder.decode(value);
+                    consoleBox.value += output;
+                    consoleBox.scrollTop = consoleBox.scrollHeight; 
+
+                    if (output.trim().endsWith(domain)) {
+                        const resultsTable = document.getElementById('results');
+                        const newRow = document.createElement('tr');
+                        const newCell = document.createElement('td');
+                        newCell.textContent = output.trim();
+                        newRow.appendChild(newCell);
+                        resultsTable.appendChild(newRow);
+                    }
+                    readChunk();
+                });
             }
 
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('results').innerHTML = '';
-            const consoleBox = document.getElementById('consoleOutput');
-            consoleBox.value = "Scanning started...\n";
-
-            // Start the scan by sending a POST request
-            fetch('/start_scan', {
-                method: 'POST',
-                body: new URLSearchParams({ 'domain': domain }),
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            })
-            .then(response => {
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder();
-
-                function readChunk() {
-                    reader.read().then(({ done, value }) => {
-                        if (done) {
-                            document.getElementById('loading').style.display = 'none';
-                            return;
-                        }
-                        const output = decoder.decode(value);
-                        consoleBox.value += output;
-                        consoleBox.scrollTop = consoleBox.scrollHeight; 
-
-                        if (output.trim().endsWith(domain)) {
-                            const resultsTable = document.getElementById('results');
-                            const newRow = document.createElement('tr');
-                            const newCell = document.createElement('td');
-                            newCell.textContent = output.trim();
-                            newRow.appendChild(newCell);
-                            resultsTable.appendChild(newRow);
-                        }
-                        readChunk();
-                    });
-                }
-
-                // Start reading the stream
-                readChunk();
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                // Hide loading indicator
-                document.getElementById('loading').style.display = 'none';
-            });
-        }
-    </script>
+            // Start reading the stream
+            readChunk();
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            // Hide loading indicator
+            document.getElementById('loading').style.display = 'none';
+        });
+    }
+</script>
 {% endblock content %}
