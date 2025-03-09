@@ -6,11 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Dorking</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
-
         body {
             background-color: #0a0a0a;
-            color: #0ff;
+            color: rgba(0, 255, 0, 0.8);
             font-family: 'Orbitron', sans-serif;
             margin: 0;
             padding: 0;
@@ -27,15 +25,15 @@
             width: 100%;
             text-align: center;
             padding: 10px;
-            background: linear-gradient(90deg, #00ffcc, #0099ff);
-            box-shadow: 0 0 20px #00ffff;
+            background: linear-gradient(90deg, rgba(0, 255, 0, 0.8), rgba(0, 150, 0, 0.8));
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
             border-radius: 10px;
         }
 
         h1 {
             margin: 0;
             font-size: 2rem;
-            color: #0a0a0a;
+            color: rgba(0, 0, 0, 0.8);
         }
 
         .grid-layout {
@@ -49,11 +47,11 @@
         .screen {
             grid-column: span 3;
             background: black;
-            border: 2px solid #00ffcc;
+            border: 2px solid rgba(0, 255, 0, 0.8);
             padding: 15px;
             text-align: center;
             font-size: 1.2rem;
-            box-shadow: 0 0 15px #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
         }
 
         .side-panel,
@@ -63,15 +61,15 @@
         .ai-suggestions,
         .query-history,
         .export-options {
-            background: rgba(0, 255, 255, 0.1);
-            border: 2px solid #00ffff;
+            background: rgba(0, 255, 0, 0.1);
+            border: 2px solid rgba(0, 255, 0, 0.8);
             padding: 15px;
             border-radius: 10px;
-            box-shadow: 0 0 10px #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
         }
 
         h2 {
-            color: #00ffff;
+            color: rgba(0, 255, 0, 0.8);
             text-align: center;
         }
 
@@ -79,8 +77,8 @@
             width: 100%;
             padding: 10px;
             background: black;
-            border: 2px solid #00ffcc;
-            color: #00ffcc;
+            border: 2px solid rgba(0, 255, 0, 0.8);
+            color: rgba(0, 255, 0, 0.8);
             font-family: 'Orbitron', sans-serif;
             font-size: 1rem;
             cursor: pointer;
@@ -89,9 +87,9 @@
         }
 
         button:hover {
-            background: #00ffcc;
+            background: rgba(0, 255, 0, 0.8);
             color: black;
-            box-shadow: 0 0 15px #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
         }
 
         input,
@@ -100,8 +98,8 @@
             width: 100%;
             padding: 8px;
             background: black;
-            border: 2px solid #00ffcc;
-            color: #00ffcc;
+            border: 2px solid rgba(0, 255, 0, 0.8);
+            color: rgba(0, 255, 0, 0.8);
             font-family: 'Orbitron', sans-serif;
             margin-top: 5px;
         }
@@ -119,21 +117,21 @@
             background: black;
             padding: 5px;
             margin-top: 5px;
-            border: 1px solid #00ffcc;
+            border: 1px solid rgba(0, 255, 0, 0.8);
             text-align: center;
         }
 
         @keyframes glow {
             0% {
-                text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc;
+                text-shadow: 0 0 5px rgba(0, 255, 0, 0.8), 0 0 10px rgba(0, 255, 0, 0.8);
             }
 
             50% {
-                text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+                text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.8);
             }
 
             100% {
-                text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc;
+                text-shadow: 0 0 5px rgba(0, 255, 0, 0.8), 0 0 10px rgba(0, 255, 0, 0.8);
             }
         }
 

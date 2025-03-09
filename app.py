@@ -44,6 +44,27 @@ def start_scan():
 
 # --------------------------------------------------------------------------------------------------
 
+#this code belongs to google dorking
+
+@app.route('/dorking')
+def dorking():
+    return render_template('dorking.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#----------------------------------------------------------------------------------------------------
+
 @app.route('/network_scan')
 def network_scan():
     return render_template('network_scan.html')
