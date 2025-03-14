@@ -6,10 +6,9 @@
 <div class="container">
     <div class="net_left">
         <div class="net_form">
-            <input type="text" placeholder="Enter Domain or IP">
-            <form action="/action_page.php">
+            <input type="text" id="target" placeholder="Enter Domain or IP">
+            <form>
                 <p>Select:</p>
-
                 <input type="radio" id="simple" name="fav_scan" value="Simple">
                 <label for="simple">Simple</label><br>
 
@@ -20,7 +19,7 @@
                 <label for="deep">Deep</label>
             </form>
 
-            <button>Scan</button>
+            <button onclick="scan()">Scan</button>
         </div>
 
         <div class="top-triangle">
@@ -31,18 +30,99 @@
         </div>
     </div>
 
-    <!-- New div that appears to the right of net_left -->
     <div class="net_cli">
         <textarea name="cli" id="area_cli">Command Interface</textarea>
     </div>
 </div>
 
-
 <div class="net_view">
-    
-
-
+    <table id="scanResults">
+        <thead>
+            <tr id="tableHead">
+                <th>Port</th>
+                <th>Service</th>
+                <th>Status</th>
+                <th>Version</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </div>
 
+<script>
+    function scan() {
+        let scanType = document.querySelector('input[name="fav_scan"]:checked')?.value;
+        if (!scanType) {
+            alert("Please select a scan type.");
+            return;
+        }
+    
+        let target = document.getElementById('target').value;
+        if (!target) {
+            alert("Please enter a target (Domain or IP).");
+            return;
+        }
+    
+        document.getElementById('area_cli').textContent = `nmap -${scanType.toLowerCase()} ${target}`;
+    
+        document.getElementById('scanResults').setAttribute('data-scan-type', scanType);
+    
+        let headers = ['Port', 'Service', 'Status', 'Version', 'Description'];
+        if (scanType === 'Moderate') {
+            headers.push('OS Discovery');
+        } else if (scanType === 'Deep') {
+            headers.push('OS Discovery', 'Script');
+        }
+    
+        let tableHead = document.getElementById('tableHead');
+        tableHead.innerHTML = '';
+        headers.forEach(header => {
+            let th = document.createElement('th');
+            th.textContent = header;
+            tableHead.appendChild(th);
+        });
+    
+        let results = [];
+        if (scanType === "Simple") {
+            results = [
+                { port: 80, service: "HTTP", status: "Open", version: "Apache/2.4.29", description: "Web server" },
+                { port: 22, service: "SSH", status: "Closed", version: "-", description: "Secure shell" }
+            ];
+        } else if (scanType === "Moderate") {
+            results = [
+                { port: 22, service: "SSH", status: "Open", version: "OpenSSH 7.6p1", description: "Secure shell", osDiscovery: "Linux" },
+                { port: 445, service: "SMB", status: "Open", version: "Windows Server 2019", description: "File sharing", osDiscovery: "Windows" }
+            ];
+        } else if (scanType === "Deep") {
+            results = [
+                { port: 443, service: "HTTPS", status: "Open", version: "nginx 1.14.0", description: "Secure web server", osDiscovery: "Linux", script: "CVE-2021-34527" },
+                { port: 21, service: "FTP", status: "Open", version: "vsftpd 3.0.3", description: "File transfer", osDiscovery: "Linux", script: "CVE-2015-1415" }
+            ];
+        }
+    
+        let tbody = document.querySelector("#scanResults tbody");
+        tbody.innerHTML = '';
+    
+        results.forEach(result => {
+            let row = document.createElement('tr');
+            headers.forEach(header => {
+                let td = document.createElement('td');
+    
+                let key = header
+                    .replace(/ /g, '')
+                    .replace(/Discovery/, 'osDiscovery') 
+                    .replace(/Script/, 'script'); 
+    
+                td.textContent = result[key] || '-';
+                row.appendChild(td);
+            });
+            tbody.appendChild(row);
+        });
+    }
+    
+    
+</script>
 
 {% endblock content %}

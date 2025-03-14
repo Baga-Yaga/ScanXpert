@@ -1,167 +1,144 @@
+/* General container styling */
 .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
-    }
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  gap: 20px;
+}
 
-    .net_left {
-        width: 58%;
-        background: rgba(0, 0, 0, 0.8);
-        border-radius: 10px;
-        box-shadow: 0 0 10px #0f0;
-        text-align: left;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-        height: 350px;
-        margin: 30px 0 30px 0px;
-    }
-    /* Styling for the form section */
-    .net_form {
-        flex: 1;
-      /* Takes available space on the left */
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 0 20px;
-    }
+.net_left, .net_cli {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  width: 45%;
+}
 
-    .net_form input[type="text"] {
-      width: 80%;
+.net_left input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.net_left form p {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.net_left label {
+  margin-left: 5px;
+  font-size: 16px;
+  color: #555;
+}
+
+.net_left button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+.net_left button:hover {
+  background-color: #45a049;
+}
+
+/* Styling for CLI area */
+#area_cli {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #272822;
+  color: #ffffff;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+}
+
+/* Table styling */
+.net_view {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+table {
+  margin-left: 5%;
+  width: 90%;
+  border-collapse: collapse;
+  background-color: #1a1a1a;
+  border: 2px solid #0f0;
+  box-shadow: 0 0 20px #0f0(0, 255, 255, 0.6);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table th {
+  background-color: #000000;
+  color: #0f0;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-bottom: 2px solid #0f0;
+  box-shadow: 0 0 10px rgba(13, 255, 0, 0.8);
+}
+
+table td {
+  padding: 14px;
+  border-bottom: 1px solid #0f0;
+  font-size: 14px;
+  color: #0f0;
+  text-align: center;
+}
+
+/* Alternating row background for cyberpunk look */
+table tr:nth-child(even) {
+  background-color: #0f0f0f;
+}
+
+table tr:hover {
+  background-color: rgba(255, 0, 255, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+/* Show additional columns for Moderate and Deep scans */
+th:nth-child(6), td:nth-child(6), th:nth-child(7), td:nth-child(7) {
+  display: none;
+}
+
+    
+/* Show additional columns based on scan type */
+[data-scan-type="Moderate"] th:nth-child(6),
+[data-scan-type="Moderate"] td:nth-child(6),
+[data-scan-type="Deep"] th:nth-child(6),
+[data-scan-type="Deep"] td:nth-child(6),
+[data-scan-type="Deep"] th:nth-child(7),
+[data-scan-type="Deep"] td:nth-child(7) {
+    display: table-cell;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+      flex-direction: column;
+      gap: 10px;
+  }
+
+  .net_left, .net_cli, .net_view {
+      width: 100%; /* Full width on smaller screens */
+  }
+
+  table th, table td {
       padding: 10px;
-      border: 2px solid #0f0;
-      background: black;
-      color: #0f0;
-      font-size: 16px;
-      text-align: center;
-      margin-bottom: 15px;
-      outline: none;
-      box-shadow: 0 0 5px #0f0;
-    }
-
-    /* Proper spacing for radio buttons */
-    .net_form input[type="radio"] {
-      accent-color: #0f0;
-      transform: scale(1.2);
-      margin-right: 5px;
-      /* Adds space between radio buttons and text */
-      margin-bottom: 5px;
-    }
-
-    .net_form label {
-      font-size: 18px;
-      color: #0f0;
-      text-shadow: 0 0 5px #0f0;
-      margin-left: 5px;
-      /* Adds space between label and next radio button */
-    }
-
-    .net_form button {
-      background: black;
-      color: #0f0;
-      border: 2px solid #0f0;
-      padding: 10px 20px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 0 7px #0f0;
-      margin-top: 10px;
-    }
-
-    .net_form button:hover {
-      background: #0f0;
-      color: black;
-      text-shadow: 0 0 7px black;
-      box-shadow: 0 0 15px #0f0;
-    }
-
-    /* Styling for GIF container */
-    .net_right {
-      padding-left: 20px;
-      /* Adds space between form and GIF */
-      overflow: hidden;
-    }
-
-    .net_right img {
-      width: 550px;
-      /* Adjust size */
-      height: 400px;
-      object-fit: cover;
-      clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
-      border-radius: 10px;
-      box-shadow: 0 0 10px #0f0;
-    }
-
-    .top-triangle {
-      position: absolute;
-    }
-
-    .top-triangle img {
-      clip-path: polygon(0 0, 100% 0, 50% 100%);
-      width: 250px;
-      height: 200px;
-      position: absolute;
-      top: -175px;
-      transform: scale(1.6); /* Increase the scale factor to zoom in */
-      transform-origin: center; 
-      left: 460px;
-
-    }
-
-
-    /* Heading styling */
-    #Heading {
-      text-align: center;
-      font-size: 28px;
-      font-weight: bold;
-      text-shadow: 0 0 10px #0f0;
-      margin-bottom: 20px;
-    }
-
-    /* Responsive Fixes */
-    @media (max-width: 768px) {
-      .net_left {
-        flex-direction: column;
-        /* Stack items in smaller screens */
-        align-items: center;
-      }
-
-      .net_right {
-        padding-left: 0;
-        margin-top: 20px;
-      }
-
-      .net_right img {
-        /* width: 120px; Reduce size on smaller screens */
-      }
-    }
-
-    .net_cli {
-    width: 37%;
-    background: rgba(0, 0, 0, 0.9);
-    color: #0f0;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #0f0;  
-    text-align: center;
-    margin-right: 30px;
-    margin-top: 36px;
-    }
-
-    #area_cli{
-      width:96%;
-      height: 400px;
-      background: rgba(0, 0, 0, 0.9);
-      color: #0f0;
-      padding: 10px;
-      border-radius: 10px;
-      border-style: none;
-      /* box-shadow: 0 0 0px #0f0; */
-      margin-right: 5px; 
-
-    }   
+      font-size: 12px;
+  }
+}
