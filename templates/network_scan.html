@@ -6,8 +6,9 @@
 <div class="container">
     <div class="net_left">
         <div class="net_form">
-            <input type="text" placeholder="Enter Domain or IP">
-            <form action="/action_page.php">
+            <!-- FIXED: Added id="target" -->
+            <input type="text" id="target" placeholder="Enter Domain or IP">
+            <form>
                 <p>Select:</p>
                 <input type="radio" id="simple" name="fav_scan" value="Simple">
                 <label for="simple">Simple</label><br>
@@ -30,15 +31,16 @@
         </div>
     </div>
 
+    <!-- Right side: Command Interface -->
     <div class="net_cli">
         <textarea name="cli" id="area_cli">Command Interface</textarea>
     </div>
 </div>
 
-
 <div class="net_view">
     <table id="scanResults">
         <thead>
+            <!-- FIXED: Added id="tableHead" -->
             <tr id="tableHead">
                 <th>Port</th>
                 <th>Service</th>
@@ -48,6 +50,7 @@
             </tr>
         </thead>
         <tbody>
+            <!-- Results will be populated here -->
         </tbody>
     </table>
 </div>
@@ -77,6 +80,7 @@
             headers.push('OS Discovery', 'Script');
         }
     
+        // Update table headers
         let tableHead = document.getElementById('tableHead');
         tableHead.innerHTML = '';
         headers.forEach(header => {
