@@ -1,208 +1,348 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Google Dorking</title>
     <style>
-        body {
-            background-color: #0a0a0a;
-            color: rgba(0, 255, 0, 0.8);
-            font-family: 'Orbitron', sans-serif;
-            margin: 0;
-            padding: 0;
+      body {
+        background-color: #0a0a0a;
+        color: rgba(0, 255, 0, 0.8);
+        font-family: "Orbitron", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .dashboard {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+      }
+
+      header {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        background: linear-gradient(
+          90deg,
+          rgba(0, 255, 0, 0.8),
+          rgba(0, 150, 0, 0.8)
+        );
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+        border-radius: 10px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 2rem;
+        color: rgba(0, 0, 0, 0.8);
+      }
+
+      .grid-layout {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr;
+        grid-gap: 20px;
+        margin-top: 20px;
+        width: 90%;
+      }
+
+      .screen {
+        grid-column: span 3;
+        background: black;
+        border: 2px solid rgba(0, 255, 0, 0.8);
+        padding: 15px;
+        text-align: center;
+        font-size: 1.2rem;
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+      }
+
+      .side-panel,
+      .controls,
+      .advanced-filters,
+      .logs,
+      .ai-suggestions,
+      .query-history,
+      .export-options {
+        background: rgba(0, 255, 0, 0.1);
+        border: 2px solid rgba(0, 255, 0, 0.8);
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+      }
+
+      h2 {
+        color: rgba(0, 255, 0, 0.8);
+        text-align: center;
+      }
+
+      button {
+        width: 100%;
+        padding: 10px;
+        background: black;
+        border: 2px solid rgba(0, 255, 0, 0.8);
+        color: rgba(0, 255, 0, 0.8);
+        font-family: "Orbitron", sans-serif;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        background: rgba(0, 255, 0, 0.8);
+        color: black;
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        background: black;
+        border: 2px solid rgba(0, 255, 0, 0.8);
+        color: rgba(0, 255, 0, 0.8);
+        font-family: "Orbitron", sans-serif;
+        margin-top: 5px;
+      }
+
+      textarea {
+        resize: none;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      ul li {
+        background: black;
+        padding: 5px;
+        margin-top: 5px;
+        border: 1px solid rgba(0, 255, 0, 0.8);
+        text-align: center;
+      }
+
+      @keyframes glow {
+        0% {
+          text-shadow: 0 0 5px rgba(0, 255, 0, 0.8),
+            0 0 10px rgba(0, 255, 0, 0.8);
         }
 
-        .dashboard {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
+        50% {
+          text-shadow: 0 0 10px rgba(0, 255, 0, 0.8),
+            0 0 20px rgba(0, 255, 0, 0.8);
         }
 
-        header {
-            width: 100%;
-            text-align: center;
-            padding: 10px;
-            background: linear-gradient(90deg, rgba(0, 255, 0, 0.8), rgba(0, 150, 0, 0.8));
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
-            border-radius: 10px;
+        100% {
+          text-shadow: 0 0 5px rgba(0, 255, 0, 0.8),
+            0 0 10px rgba(0, 255, 0, 0.8);
         }
+      }
 
-        h1 {
-            margin: 0;
-            font-size: 2rem;
-            color: rgba(0, 0, 0, 0.8);
-        }
-
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            grid-gap: 20px;
-            margin-top: 20px;
-            width: 90%;
-        }
-
-        .screen {
-            grid-column: span 3;
-            background: black;
-            border: 2px solid rgba(0, 255, 0, 0.8);
-            padding: 15px;
-            text-align: center;
-            font-size: 1.2rem;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
-        }
-
-        .side-panel,
-        .controls,
-        .advanced-filters,
-        .logs,
-        .ai-suggestions,
-        .query-history,
-        .export-options {
-            background: rgba(0, 255, 0, 0.1);
-            border: 2px solid rgba(0, 255, 0, 0.8);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
-        }
-
-        h2 {
-            color: rgba(0, 255, 0, 0.8);
-            text-align: center;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background: black;
-            border: 2px solid rgba(0, 255, 0, 0.8);
-            color: rgba(0, 255, 0, 0.8);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: rgba(0, 255, 0, 0.8);
-            color: black;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 8px;
-            background: black;
-            border: 2px solid rgba(0, 255, 0, 0.8);
-            color: rgba(0, 255, 0, 0.8);
-            font-family: 'Orbitron', sans-serif;
-            margin-top: 5px;
-        }
-
-        textarea {
-            resize: none;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        ul li {
-            background: black;
-            padding: 5px;
-            margin-top: 5px;
-            border: 1px solid rgba(0, 255, 0, 0.8);
-            text-align: center;
-        }
-
-        @keyframes glow {
-            0% {
-                text-shadow: 0 0 5px rgba(0, 255, 0, 0.8), 0 0 10px rgba(0, 255, 0, 0.8);
-            }
-
-            50% {
-                text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.8);
-            }
-
-            100% {
-                text-shadow: 0 0 5px rgba(0, 255, 0, 0.8), 0 0 10px rgba(0, 255, 0, 0.8);
-            }
-        }
-
-        h1,
-        h2 {
-            animation: glow 1.5s infinite alternate;
-        }
+      h1,
+      h2 {
+        animation: glow 1.5s infinite alternate;
+      }
     </style>
-</head>
+    <script>
+      let searchLogs = localStorage.getItem("searchLogs");
+      let options = {
+        targetUrl: "",
+        sqlDatabase: false,
+        openDerictory: false,
+        sensitiveFiles: false,
+        cameraFeed: false,
+        subdomainEnumeration: false,
+        credentialLeak: false,
+        excludeSite: [],
+        timeRange: 0,
+        findLogins: false,
+        filterDuplicates: false,
+        dorkType: "File Type Search",
+      };
 
-<body>
+      function handleGenerateQuery() {}
+      function exportResults() {}
+      function handleToolOption(context) {
+        // console.log(context)
+        switch (context.attributes[2].value) {
+          case "sqlDatabase":
+            options.sqlDatabase = !options.sqlDatabase;
+            break;
+          case "openDerictory":
+            options.openDerictory = !options.openDerictory;
+            break;
+          case "sensitiveFiles":
+            options.sensitiveFiles = !options.sensitiveFiles;
+            break;
+          case "cameraFeed":
+            options.cameraFeed = !options.cameraFeed;
+            break;
+          case "subdomainEnumeration":
+            options.subdomainEnumeration = !options.subdomainEnumeration;
+            break;
+          case "credentialLeak":
+            options.credentialLeak = !options.credentialLeak;
+            break;
+        }
+        const map = {
+          sqlDatabase: options.sqlDatabase,
+          openDerictory: options.openDerictory,
+          sensitiveFiles: options.sensitiveFiles,
+          cameraFeed: options.sensitiveFiles,
+          subdomainEnumeration: options.subdomainEnumeration,
+          credentialLeak: options.credentialLeak,
+        };
+
+        if (map[context.attributes[2].value]) {
+          context.style.color = "white";
+          context.style.background = "#494949";
+          context.style.boxShadow = "0 0 15px rgba(0, 253, 0, 0.8)";
+        } else {
+          context.style.color = "rgb(0, 255, 0)";
+          context.style.background = "black";
+          context.style.boxShadow = "";
+        }
+      }
+    </script>
+  </head>
+
+  <body>
     <div class="dashboard">
-        <header>
-            <h1>Google Dorking Control Panel</h1>
-        </header>
-        <div class="grid-layout">
-            <div class="screen">
-                <p id="query-display">SELECT A DORKING OPTION</p>
-            </div>
-            <div class="side-panel">
-                <h2>Quick Tools</h2>
-                <button class="quick-btn">SQL Database Search</button>
-                <button class="quick-btn">Open Directory Search</button>
-                <button class="quick-btn">Sensitive Files</button>
-                <button class="quick-btn">Camera Feeds</button>
-                <button class="quick-btn">Subdomain Enumeration</button>
-                <button class="quick-btn">Credential Leak Search</button>
-            </div>
-            <div class="controls">
-                <h2>Dork Generator</h2>
-                <label for="dork-type">Dork Type:</label>
-                <select id="dork-type">
-                    <option value="filetype">File Type Search</option>
-                    <option value="inurl">Admin Login Finder</option>
-                    <option value="intitle">Index Page Search</option>
-                    <option value="ext">Sensitive File Search</option>
-                    <option value="site">Specific Website Search</option>
-                    <option value="cache">Cached Page Lookup</option>
-                </select>
-                <input type="text" id="custom-input" placeholder="Enter additional parameters...">
-                <button class="generate-btn">Generate Query</button>
-            </div>
-            <div class="advanced-filters">
-                <h2>Advanced Filters</h2>
-                <label><input type="checkbox"> Exclude Specific Sites</label>
-                <label><input type="checkbox"> Search within a Time Range</label>
-                <label><input type="checkbox"> Find Login Pages</label>
-                <label><input type="checkbox"> Filter Out Duplicates</label>
-            </div>
-            <div class="logs">
-                <h2>Search Logs</h2>
-                <ul id="log-list">
-                    <li>Previous searches will appear here...</li>
-                </ul>
-            </div>
-            <div class="ai-suggestions">
-                <h2>AI Suggestions</h2>
-                <p>Let AI analyze and suggest best dorks based on your target.</p>
-                <button class="ai-btn">Generate AI Query</button>
-            </div>
-            <div class="query-history">
-                <h2>Query History</h2>
-                <textarea id="query-history" rows="5" readonly></textarea>
-            </div>
-            <div class="export-options">
-                <h2>Export Options</h2>
-                <button class="export-btn">Export as TXT</button>
-                <button class="export-btn">Export as JSON</button>
-            </div>
+      <header>
+        <h1>Google Dorking Control Panel</h1>
+      </header>
+      <div class="grid-layout">
+        <div class="screen">
+          <p id="query-display">SELECT A DORKING OPTION</p>
         </div>
-    </div>
-</body>
+        <div class="side-panel">
+          <h2>Quick Tools</h2>
+          <button
+            class="quick-btn"
+            onclick="handleToolOption(this)"
+            id="sqlDatabase"
+          >
+            SQL Database Search
+          </button>
+          <button
+            class="quick-btn"
+            onclick="handleToolOption(this)"
+            id="openDerictory"
+          >
+            Open Directory Search
+          </button>
+          <button
+            class="quick-btn"
+            onclick="handleToolOption(this)"
+            id="sensitiveFiles"
+          >
+            Sensitive Files
+          </button>
+          <button
+            class="quick-btn"
+            onclick="handleToolOption(this)"
+            id="cameraFeed"
+          >
+            Camera Feeds
+          </button>
+          <button
+            class="quick-btn"
+            onclick="handleToolOption(this)"
+            id="subdomainEnumeration"
+          >
+            Subdomain Enumeration
+          </button>
+          <button
+            class="quick-btn"
+            onclick="handleToolOption(this)"
+            id="credentialLeak"
+          >
+            Credential Leak Search
+          </button>
+        </div>
+        <div class="controls">
+          <h2>Dork Target</h2>
+          <input
+            type="text"
+            id="custom-input"
+            style="width: 95%"
+            placeholder="Enter target domain..."
+          />
+          <br />
+          <h2>Dork Generator</h2>
+          <label for="dork-type">Dork Type:</label>
+          <select id="dork-type">
+            <option value="filetype">File Type Search</option>
+            <option value="inurl">Admin Login Finder</option>
+            <option value="intitle">Index Page Search</option>
+            <option value="ext">Sensitive File Search</option>
+            <option value="site">Specific Website Search</option>
+            <option value="cache">Cached Page Lookup</option>
+          </select>
+          <input
+            type="text"
+            id="custom-input"
+            placeholder="Enter additional parameters..."
+          />
+          <button class="generate-btn">Generate Query</button>
+        </div>
+        <div class="advanced-filters">
+          <h2>Advanced Filters</h2>
+          <div style="display: flex;align-items: center; justify-content:start;height: fit-content;">
+            <p style="margin: 0;">Exclude Specific Sites</p> 
+            <input type="checkbox" style="height: 15px;width: 15px;" />
+         </div>
+          <input
+            type="text"
+            style="width: 95%"
+            placeholder="add sites comma seperated Ex: abg.com,a1.com"
+          />
 
+          <br/>
+          <div style="display: flex;align-items: center; justify-content:start;height: fit-content;">
+            <p style="margin: 0;">Search within a Time Range</p> 
+            <input type="checkbox" style="height: 15px;width: 15px;" />
+         </div>
+
+
+          <br/>
+          <div style="display: flex;align-items: center; justify-content:start;height: fit-content;">
+            <p style="margin: 0;">Find Login Pages</p> 
+            <input type="checkbox" style="height: 15px;width: 15px;" />
+         </div>
+         <br/>
+          <div style="display: flex;align-items: center; justify-content:start;height: fit-content;">
+            <p style="margin: 0;">Filter Out Duplicates</p> 
+            <input type="checkbox" style="height: 15px;width: 15px;" />
+         </div>
+          <label style="display: flex"
+            ><input type="checkbox" /> Filter Out Duplicates</label
+          >
+        </div>
+        <div class="logs">
+          <h2>Search Logs</h2>
+          <ul id="log-list">
+            <li>Previous searches will appear here...</li>
+          </ul>
+        </div>
+        <div class="ai-suggestions">
+          <h2>AI Suggestions</h2>
+          <p>Let AI analyze and suggest best dorks based on your target.</p>
+          <button class="ai-btn">Generate AI Query</button>
+        </div>
+        <div class="query-history">
+          <h2>Query History</h2>
+          <textarea id="query-history" rows="5" readonly></textarea>
+        </div>
+        <div class="export-options">
+          <h2>Export Options</h2>
+          <button class="export-btn">Export as TXT</button>
+          <button class="export-btn">Export as JSON</button>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
