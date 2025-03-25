@@ -145,13 +145,162 @@
       h2 {
         animation: glow 1.5s infinite alternate;
       }
+
+      .terminal {
+        margin-top: 10px;
+        background-color: black;
+        color: #00ff00;
+        padding: 10px;
+        font-family: "Courier New", monospace;
+        border: 2px solid #00ff00;
+        width: 95%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+
+        /* justify-content: space-between; */
+        /* align-items: center; */
+      }
+      pre {
+        margin: 0;
+        padding-right: 10px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+      .upperPart {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .copy {
+        /* button */
+        --button-bg: #353434;
+        --button-hover-bg: #464646;
+        --button-text-color: #cccccc;
+        --button-hover-text-color: rgba(0, 255, 0, 0.8);
+        --button-border-radius: 10px;
+        --button-diameter: 36px;
+        --button-outline-width: 1px;
+        --button-outline-color: rgb(141, 141, 141);
+        /* tooltip */
+        --tooltip-bg: #f4f3f3;
+        --toolptip-border-radius: 4px;
+        --tooltip-font-family: Menlo, Roboto Mono, monospace;
+        /* 👆 this field should not be empty */
+        --tooltip-font-size: 12px;
+        /* 👆 this field should not be empty */
+        --tootip-text-color: rgb(50, 50, 50);
+        --tooltip-padding-x: 7px;
+        --tooltip-padding-y: 7px;
+        --tooltip-offset: 8px;
+        /* --tooltip-transition-duration: 0.3s; */
+        /* 👆 if you need a transition, 
+  just remove the comment,
+  but I didn't like the transition :| */
+      }
+
+      .copy {
+        box-sizing: border-box;
+        width: var(--button-diameter);
+        height: var(--button-diameter);
+        border-radius: var(--button-border-radius);
+        background-color: var(--button-bg);
+        color: var(--button-text-color);
+        border: none;
+        cursor: pointer;
+        position: relative;
+        outline: none;
+        margin-top: 0px;
+      }
+
+      .tooltip {
+        position: absolute;
+        opacity: 0;
+        visibility: 0;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        font: var(--tooltip-font-size) var(--tooltip-font-family);
+        color: var(--tootip-text-color);
+        background: var(--tooltip-bg);
+        padding: var(--tooltip-padding-y) var(--tooltip-padding-x);
+        border-radius: var(--toolptip-border-radius);
+        pointer-events: none;
+        transition: all var(--tooltip-transition-duration)
+          cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      }
+
+      .tooltip::before {
+        content: attr(data-text-initial);
+      }
+
+      .tooltip::after {
+        content: "";
+        position: absolute;
+        bottom: calc(var(--tooltip-padding-y) / 2 * -1);
+        width: var(--tooltip-padding-y);
+        height: var(--tooltip-padding-y);
+        background: inherit;
+        left: 50%;
+        transform: translateX(-50%) rotate(45deg);
+        z-index: -999;
+        pointer-events: none;
+      }
+
+      .copy svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .checkmark {
+        display: none;
+      }
+
+      /* actions */
+
+      .copy:hover .tooltip,
+      .copy:focus:not(:focus-visible) .tooltip {
+        opacity: 1;
+        visibility: visible;
+        top: calc((100% + var(--tooltip-offset)) * -1);
+      }
+
+      .copy:focus:not(:focus-visible) .tooltip::before {
+        content: attr(data-text-end);
+      }
+
+      .copy:focus:not(:focus-visible) .clipboard {
+        display: none;
+      }
+
+      .copy:focus:not(:focus-visible) .checkmark {
+        display: block;
+      }
+
+      .copy:hover,
+      .copy:focus {
+        background-color: var(--button-hover-bg);
+      }
+
+      .copy:active {
+        outline: var(--button-outline-width) solid var(--button-outline-color);
+      }
+
+      .copy:hover svg {
+        color: var(--button-hover-text-color);
+      }
     </style>
     <script>
       let searchLogs = localStorage.getItem("searchLogs");
+      let resultQuery="";
       let options = {
         targetUrl: "",
         sqlDatabase: false,
-        openDerictory: false,
+        openDirectory: false,
         sensitiveFiles: false,
         cameraFeed: false,
         subdomainEnumeration: false,
@@ -161,42 +310,44 @@
         findLogins: false,
         filterDuplicates: false,
         dorkType: "File Type Search",
+        additioalParameters: "",
       };
 
-      function handleGenerateQuery() {}
+      async function handleGenerateQuery() {
+        options.targetUrl = document.getElementById("target-input").value;
+        options.dorkType = document.getElementById("dork-type").value;
+        try {
+          const response = await fetch("http://localhost:5000/generate_query", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(options),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            console.log("Generated Query:", data.query);
+            document.getElementById("generatedQuery").innerText = data.query;
+            resultQuery=data.query
+          } else {
+            resultQuery=data.error
+            console.error("Error:", data.error);
+            alert("Error generating query: " + data.error);
+          }
+        } catch (error) {
+          console.error("Request failed:", error);
+          alert("Failed to generate query. Please try again.");
+        }
+      }
+
       function exportResults() {}
       function handleToolOption(context) {
         // console.log(context)
-        switch (context.attributes[2].value) {
-          case "sqlDatabase":
-            options.sqlDatabase = !options.sqlDatabase;
-            break;
-          case "openDerictory":
-            options.openDerictory = !options.openDerictory;
-            break;
-          case "sensitiveFiles":
-            options.sensitiveFiles = !options.sensitiveFiles;
-            break;
-          case "cameraFeed":
-            options.cameraFeed = !options.cameraFeed;
-            break;
-          case "subdomainEnumeration":
-            options.subdomainEnumeration = !options.subdomainEnumeration;
-            break;
-          case "credentialLeak":
-            options.credentialLeak = !options.credentialLeak;
-            break;
-        }
-        const map = {
-          sqlDatabase: options.sqlDatabase,
-          openDerictory: options.openDerictory,
-          sensitiveFiles: options.sensitiveFiles,
-          cameraFeed: options.sensitiveFiles,
-          subdomainEnumeration: options.subdomainEnumeration,
-          credentialLeak: options.credentialLeak,
-        };
-
-        if (map[context.attributes[2].value]) {
+        let optionKey = context.id;
+        options[optionKey] = !options[optionKey];
+        if (options[optionKey]) {
           context.style.color = "white";
           context.style.background = "#494949";
           context.style.boxShadow = "0 0 15px rgba(0, 253, 0, 0.8)";
@@ -205,6 +356,59 @@
           context.style.background = "black";
           context.style.boxShadow = "";
         }
+      }
+      function handleFilterDuplicate(context) {
+        options.filterDuplicates = context.checked;
+      }
+      function handleExcludeSpecificSites(context) {
+        const textField = document.getElementById("excludeSite");
+        if (context.checked) {
+          textField.disabled = false;
+          textField.style.border = "2px solid rgba(0, 255, 0, 0.8)";
+          options.excludeSite = textField.value.split(",");
+        } else {
+          textField.disabled = true;
+          textField.style.border = "2px solid rgba(6, 145, 6, 0.8)";
+          options.excludeSite = [];
+        }
+      }
+      function handleExcludeSiteChange(context) {
+        options.excludeSite = context.value.slpit(",");
+      }
+      function handleFindLoginPage(context) {
+        options.findLogins = context.checked;
+      }
+      function handleSearchWithinTimeRange(context) {
+        // const searchTimeFlag=context.isChecked;
+        const textField = document.getElementById("range");
+        if (context.checked) {
+          textField.disabled = false;
+          textField.style.border = "2px solid rgba(0, 255, 0, 0.8)";
+          options.timeRange = textField.value;
+        } else {
+          textField.disabled = true;
+          textField.style.border = "2px solid rgba(6, 145, 6, 0.8)";
+          options.timeRange = 0;
+        }
+      }
+      function handleRangeChange(context) {
+        options.timeRange = parseInt(context.value) || 0;
+      }
+
+      function handleDorkType(context) {
+        options.dorkType = context.value;
+        // console.log(context.value)
+      }
+
+      function handleAdditionalParameters(context) {
+        options.additioalParameters = context.value;
+      }
+
+      function handleTargetUrl(context) {
+        options.targetUrl = context.value;
+      }
+      function copyToClipBoard(){
+        navigator.clipboard.writeText(resultQuery)
       }
     </script>
   </head>
@@ -230,7 +434,7 @@
           <button
             class="quick-btn"
             onclick="handleToolOption(this)"
-            id="openDerictory"
+            id="openDirectory"
           >
             Open Directory Search
           </button>
@@ -267,60 +471,166 @@
           <h2>Dork Target</h2>
           <input
             type="text"
-            id="custom-input"
+            id="target-input"
+            onchange="handleTargetUrl(this)"
             style="width: 95%"
             placeholder="Enter target domain..."
           />
           <br />
           <h2>Dork Generator</h2>
           <label for="dork-type">Dork Type:</label>
-          <select id="dork-type">
-            <option value="filetype">File Type Search</option>
-            <option value="inurl">Admin Login Finder</option>
-            <option value="intitle">Index Page Search</option>
-            <option value="ext">Sensitive File Search</option>
-            <option value="site">Specific Website Search</option>
-            <option value="cache">Cached Page Lookup</option>
+          <select id="dork-type" onchange="handleDorkType(this)">
+            <option value="fileType">File Type Search</option>
+            <option value="adminUrl">Admin Login Finder</option>
+            <option value="inTitle">Index Page Search</option>
+            <option value="sensitiveFile">Sensitive File Search</option>
+            <option value="cachePage">Cached Page Lookup</option>
           </select>
           <input
             type="text"
             id="custom-input"
             placeholder="Enter additional parameters..."
+            style="width: 95%"
+            onchange="handleAdditionalParameters(this)"
           />
-          <button class="generate-btn">Generate Query</button>
+          <button class="generate-btn" onclick="handleGenerateQuery()">
+            Generate Query
+          </button>
+          <!-- <p id="generatedQuery">Query will appear here</p> -->
+          <div class="terminal">
+            <!-- From Uiverse.io by Galahhad -->
+            <div class="upperPart">
+              <label for="">Dork Query</label>
+              <button class="copy" onclick="copyToClipBoard()">
+                <span
+                  data-text-end="Copied!"
+                  data-text-initial="Copy to clipboard"
+                  class="tooltip"
+                ></span>
+                <span>
+                  <svg
+                    xml:space="preserve"
+                    style="enable-background: new 0 0 512 512"
+                    viewBox="0 0 6.35 6.35"
+                    y="0"
+                    x="0"
+                    height="20"
+                    width="20"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="clipboard"
+                  >
+                    <g>
+                      <path
+                        fill="currentColor"
+                        d="M2.43.265c-.3 0-.548.236-.573.53h-.328a.74.74 0 0 0-.735.734v3.822a.74.74 0 0 0 .735.734H4.82a.74.74 0 0 0 .735-.734V1.529a.74.74 0 0 0-.735-.735h-.328a.58.58 0 0 0-.573-.53zm0 .529h1.49c.032 0 .049.017.049.049v.431c0 .032-.017.049-.049.049H2.43c-.032 0-.05-.017-.05-.049V.843c0-.032.018-.05.05-.05zm-.901.53h.328c.026.292.274.528.573.528h1.49a.58.58 0 0 0 .573-.529h.328a.2.2 0 0 1 .206.206v3.822a.2.2 0 0 1-.206.205H1.53a.2.2 0 0 1-.206-.205V1.529a.2.2 0 0 1 .206-.206z"
+                      ></path>
+                    </g>
+                  </svg>
+                  <svg
+                    xml:space="preserve"
+                    style="enable-background: new 0 0 512 512"
+                    viewBox="0 0 24 24"
+                    y="0"
+                    x="0"
+                    height="18"
+                    width="18"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="checkmark"
+                  >
+                    <g>
+                      <path
+                        data-original="#000000"
+                        fill="currentColor"
+                        d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"
+                      ></path>
+                    </g>
+                  </svg>
+                </span>
+              </button>
+            </div>
+            <pre id="generatedQuery">Query will appear here...</pre>
+
+          </div>
         </div>
         <div class="advanced-filters">
           <h2>Advanced Filters</h2>
-          <div style="display: flex;align-items: center; justify-content:start;height: fit-content;">
-            <p style="margin: 0;">Exclude Specific Sites</p> 
-            <input type="checkbox" style="height: 15px;width: 15px;" />
-         </div>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: start;
+              height: fit-content;
+            "
+          >
+            <p style="margin: 0">Exclude Specific Sites</p>
+            <input
+              type="checkbox"
+              style="height: 15px; width: 15px"
+              onclick="handleExcludeSpecificSites(this)"
+            />
+          </div>
           <input
             type="text"
-            style="width: 95%"
+            style="width: 95%; border: 2px solid rgba(6, 145, 6, 0.8)"
             placeholder="add sites comma seperated Ex: abg.com,a1.com"
+            disabled
+            onchange="handleExcludeSiteChange(this)"
+            id="excludeSite"
           />
 
-          <br/>
-          <div style="display: flex;align-items: center; justify-content:start;height: fit-content;">
-            <p style="margin: 0;">Search within a Time Range</p> 
-            <input type="checkbox" style="height: 15px;width: 15px;" />
-         </div>
-
-
-          <br/>
-          <div style="display: flex;align-items: center; justify-content:start;height: fit-content;">
-            <p style="margin: 0;">Find Login Pages</p> 
-            <input type="checkbox" style="height: 15px;width: 15px;" />
-         </div>
-         <br/>
-          <div style="display: flex;align-items: center; justify-content:start;height: fit-content;">
-            <p style="margin: 0;">Filter Out Duplicates</p> 
-            <input type="checkbox" style="height: 15px;width: 15px;" />
-         </div>
-          <label style="display: flex"
-            ><input type="checkbox" /> Filter Out Duplicates</label
+          <br />
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: start;
+              height: fit-content;
+            "
           >
+            <p style="margin: 0">Search within a Time Range</p>
+            <input
+              type="checkbox"
+              style="height: 15px; width: 15px"
+              onchange="handleSearchWithinTimeRange(this)"
+            />
+          </div>
+          <input
+            type="number"
+            placeholder="Enter range in ms, Ex: 1000-2000"
+            disabled
+            style="width: 95%; border: 2px solid rgba(6, 145, 6, 0.8)"
+            id="range"
+            onchange="handleRangeChange(this)"
+          />
+
+          <br />
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: start;
+              height: fit-content;
+            "
+          >
+            <p style="margin: 0">Find Login Pages</p>
+            <input type="checkbox" style="height: 15px; width: 15px" />
+          </div>
+          <br />
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: start;
+              height: fit-content;
+            "
+          >
+            <p style="margin: 0">Filter Out Duplicates</p>
+            <input type="checkbox" style="height: 15px; width: 15px" />
+          </div>
         </div>
         <div class="logs">
           <h2>Search Logs</h2>
