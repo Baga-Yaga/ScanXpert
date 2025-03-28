@@ -1,0 +1,11 @@
+{"subdomain":"http://ottblrcdn1.actcorp.in","ip":"49.205.73.10","port":"443","status_code":404,"tech":null}
+{"subdomain":"http://ottblrcdn2.actcorp.in","ip":"49.205.73.11","port":"443","status_code":404,"tech":null}
+{"subdomain":"https://elink.mailer11.actcorp.in","ip":"3.111.132.252","port":"443","status_code":302,"tech":null}
+{"subdomain":"https://img.actcorp.in","ip":"202.53.8.228","port":"443","status_code":403,"tech":null}
+{"subdomain":"https://otthydcdn1.actcorp.in","ip":"183.82.12.10","port":"443","status_code":404,"tech":null}
+{"subdomain":"https://selfcare-blr.actcorp.in","ip":"106.51.41.221","port":"443","status_code":200,"tech":["Bootstrap","Google Tag Manager","Nginx"]}
+{"subdomain":"https://elink.in4.actcorp.in","ip":"65.1.253.119","port":"443","status_code":302,"tech":null}
+{"subdomain":"https://myfibernet-blr.actcorp.in","ip":"106.51.41.105","port":"443","status_code":200,"tech":["Apache HTTP Server","HSTS","PHP:7.2.34"]}
+{"subdomain":"https://evfileshare-blr.actcorp.in","ip":"49.205.74.11","port":"443","status_code":200,"tech":["Apache HTTP Server"]}
+{"subdomain":"https://www.actcorp.in","ip":"64.185.181.238","port":"443","status_code":200,"tech":["Bootstrap","Drupal:10","Google Maps","Google Tag Manager","PHP:8.2.28","Popper","Select2","Slick","crypto-js","jQuery"]}
+{"subdomain":"http://portal.actcorp.in","ip":"202.53.8.30","port":"80","status_code":302,"tech":["Apache HTTP Server"]}

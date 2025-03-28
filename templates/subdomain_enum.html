@@ -42,7 +42,6 @@
       <h3>Scan Summary</h3>
       <p>Total Subdomains: <span id="totalSubdomains">0</span></p>
       <p>Live Subdomains: <span id="liveSubdomains">0</span></p>
-      <p>1xx: <span id="status1xx">0</span></p>
       <p>2xx: <span id="status2xx">0</span></p>
       <p>3xx: <span id="status3xx">0</span></p>
       <p>4xx: <span id="status4xx">0</span></p>
@@ -63,20 +62,27 @@
             <tr>
                 <td>sub1.example.com</td>
                 <td>192.168.1.1</td>
-                <td>80, 443</td>
                 <td><span class="status up">Up</span></td>
+                <td>80, 443</td>
                 <td>Nginx, PHP</td>
+            </tr>
+            <tr>
+                <td>sub2.example.com</td>
+                <td>192.168.1.2</td>
+                <td><span class="status down">Down</span></td>
+                <td>-</td>
+                <td>-</td>
             </tr>
           </thead>
           <tbody id="resultBody">
             <!-- Dynamically generated rows go here -->
           </tbody>
         </table>
-        <div class="pagination">
+        <!--<div class="pagination">
           <button id="prevPage" onclick="changePage(-1)">Prev</button>
           <span id="pageIndicator"></span>
           <button id="nextPage" onclick="changePage(1)">Next</button>
-        </div>
+        </div>-->
       </div>
   </div>
 </div>
@@ -89,7 +95,6 @@
         }
 
             document.getElementById('loading').style.display = 'block';
-            document.getElementById('results').innerHTML = '';
             const consoleBox = document.getElementById('consoleOutput');
             consoleBox.value = "Scanning started...\n";
 

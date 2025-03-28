@@ -173,7 +173,7 @@
     }
 
 
-    table {
+    #scanResults {
       margin-left: 5%;
       width: 90%;
       border-collapse: collapse;

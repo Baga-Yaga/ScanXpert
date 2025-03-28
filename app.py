@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template,Response,stream_with_context
 import subprocess
-
+from backend import *
 app = Flask(__name__,template_folder='templates',static_folder='/',static_url_path='/')
 
 @app.route('/')
@@ -23,24 +23,32 @@ def start_scan():
     if not domain:
         return "No domain provided", 400
 
+    # def run_scan(domain):
+    #     """Generator function to yield live output of the subfinder command."""
+    #     process = subprocess.Popen(
+    #         ['subfinder', '-d', domain, '-silent'],  # Run subfinder command
+    #         stdout=subprocess.PIPE,
+    #         stderr=subprocess.STDOUT,
+    #         text=True
+    #     )
     def run_scan(domain):
         """Generator function to yield live output of the subfinder command."""
         process = subprocess.Popen(
-            ['subfinder', '-d', domain, '-silent'],  # Run subfinder command
+            ['python3','backend/subdomain_enum.py', domain, '--enum'],  # Run subfinder command
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True
         )
-
         # Stream output line by line
         for line in iter(process.stdout.readline, ''):
             yield  f"{line.strip()} \n"  
 
         process.stdout.close()
-        process.wait()
+        # process.wait()
         yield "[ SCAN COMPLETED ]\n\n"
 
     return Response(run_scan(domain), mimetype='text/event-stream')
+
 
 # --------------------------------------------------------------------------------------------------
 
