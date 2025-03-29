@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Google Dorking</title>
+    <link rel="stylesheet" href="../static/css/font.css" />
     <style>
       body {
         background-color: #0a0a0a;
@@ -296,7 +297,8 @@
     </style>
     <script>
       let searchLogs = localStorage.getItem("searchLogs");
-      let resultQuery="";
+      let resultQuery = "";
+      let resultAIQuery = "";
       let options = {
         targetUrl: "",
         sqlDatabase: false,
@@ -330,9 +332,9 @@
           if (response.ok) {
             console.log("Generated Query:", data.query);
             document.getElementById("generatedQuery").innerText = data.query;
-            resultQuery=data.query
+            resultQuery = data.query;
           } else {
-            resultQuery=data.error
+            resultQuery = data.error;
             console.error("Error:", data.error);
             alert("Error generating query: " + data.error);
           }
@@ -407,14 +409,75 @@
       function handleTargetUrl(context) {
         options.targetUrl = context.value;
       }
-      function copyToClipBoard(){
-        navigator.clipboard.writeText(resultQuery)
+      function copyToClipBoard() {
+        navigator.clipboard.writeText(resultQuery);
       }
+
+      async function handleAiQuery(context) {
+        try {
+          const response = await fetch(
+            "http://localhost:5000/generate_ai_query",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                prompt: document.getElementById("prompt").value,
+              }),
+            }
+          );
+          const data = await response.json();
+          if (data.query) {
+            let generatedAIQuery = document.getElementById("generatedAIQuery");
+            generatedAIQuery.innerText = "";
+            resultAIQuery = data.query.split(" $ ");
+            resultAIQuery.map((ele) => {
+              generatedAIQuery.innerHTML +=
+                "<pre style='background:#353434;padding:2px;color:white;border-radius:5px;margin-top:4px;cursor:pointer;' class='codeNormal' title='Click to copy!' onclick='navigator.clipboard.writeText(this.innerText);showCopied()'>" +
+                ele +
+                "</pre>";
+              // generatedAIQuery.innerHTML+=ele+" "
+              // generatedAIQuery.innerHTML+="</pre>"
+            });
+          }
+          const item = {
+            time: new Date(),
+            searchQuery: document.getElementById("prompt").value,
+            results: resultAIQuery,
+          };
+          const oldHistory = JSON.parse(localStorage.getItem("searchLogs"));
+          if (oldHistory) {
+            oldHistory.push(item);
+            localStorage.setItem("searchLogs", JSON.stringify(oldHistory));
+          } else {
+            localStorage.setItem("searchLogs", JSON.stringify([item]));
+          }
+          // if(data.status==200){
+          //   console.log(response)
+          //   console.log(response.data)
+          // }
+        } catch (error) {
+          console.error("Request failed:", error);
+
+          alert("Failed to generate query. Please try again.");
+        }
+      }
+      function showCopied() {
+        alert("quiery copied ");
+      }
+
+      window.onload = function () {
+        const searchLogs =JSON.parse(localStorage.getItem("searchLogs"));
+        if (searchLogs) {
+          
+        }
+      };
     </script>
   </head>
 
   <body>
-    <div class="dashboard">
+    <div class="dashboard" style="font-family: monospace">
       <header>
         <h1>Google Dorking Control Panel</h1>
       </header>
@@ -553,7 +616,6 @@
               </button>
             </div>
             <pre id="generatedQuery">Query will appear here...</pre>
-
           </div>
         </div>
         <div class="advanced-filters">
@@ -641,7 +703,23 @@
         <div class="ai-suggestions">
           <h2>AI Suggestions</h2>
           <p>Let AI analyze and suggest best dorks based on your target.</p>
-          <button class="ai-btn">Generate AI Query</button>
+
+          <input
+            type="text"
+            style="width: 95%"
+            placeholder="Enter a prompt here"
+            id="prompt"
+          />
+          <button class="ai-btn" onclick="handleAiQuery(this)">
+            Generate AI Query
+          </button>
+          <div class="terminal">
+            <!-- From Uiverse.io by Galahhad -->
+            <div class="upperPart">
+              <label for="">Dork Query</label>
+            </div>
+            <pre id="generatedAIQuery">Query will appear here...</pre>
+          </div>
         </div>
         <div class="query-history">
           <h2>Query History</h2>

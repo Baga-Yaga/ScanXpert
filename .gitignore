@@ -1,2 +1,4 @@
 venv/
 VenvScanExpert/
+reports/
+utils/__pycache__

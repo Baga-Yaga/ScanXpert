@@ -2,6 +2,8 @@ import os
 import socket
 from flask import Flask, jsonify, request, render_template, Response
 import subprocess, json
+from utils.dorking import generate_dork_query, generate_ai_powered_dork
+
 from backend import *
 from flask_cors import CORS # type: ignore
 
@@ -81,6 +83,29 @@ def get_detailed_results():
 @app.route('/dorking')
 def dorking():
     return render_template('dorking.html')
+
+@app.route('/generate_query', methods=['POST'])
+def generate_query():
+    data = request.get_json()
+    if not isinstance(data, dict):
+        return jsonify({"error": "Invalid input format"}), 400
+    
+    query = generate_dork_query(data)
+    return jsonify({"query": query})
+
+
+@app.route('/generate_ai_query', methods=['POST'])
+def generate_ai_query():
+    data = request.get_json()
+    # if not isinstance(data, dict):
+    #     return jsonify({"error": "Invalid input format"}), 400
+    if(len(data.get("prompt",""))==0):
+        return jsonify({"error": "Invalid input format"}), 400
+    
+    
+    query = generate_ai_powered_dork(data)
+    print(query.split(" $ "))
+    return jsonify({"query": query})
 
 # -------------------------- Wayback URL Fetching -----------------------
 
