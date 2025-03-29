@@ -58,7 +58,7 @@ def scan_summary(domain):
     active_file = os.path.join(output_dir, "activesubs")
     jsonfile = os.path.join(output_dir, "live_domain_detail.json")
     
-    summary = {}
+    summary = {'total':0,'live':0,'2xx':0,'3xx':0,'4xx':0,'5xx':0}
     sc2, sc3, sc4, sc5 = 0, 0, 0, 0
     with open(output_file, 'r') as f1:
         total = sum(1 for line in f1 if line.strip())

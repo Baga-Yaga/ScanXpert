@@ -1,5 +1,6 @@
-from flask import Flask, request, render_template,Response,stream_with_context
-import subprocess
+import os
+from flask import Flask, jsonify, request, render_template,Response,stream_with_context
+import subprocess,json
 from backend import *
 app = Flask(__name__,template_folder='templates',static_folder='/',static_url_path='/')
 
@@ -23,14 +24,6 @@ def start_scan():
     if not domain:
         return "No domain provided", 400
 
-    # def run_scan(domain):
-    #     """Generator function to yield live output of the subfinder command."""
-    #     process = subprocess.Popen(
-    #         ['subfinder', '-d', domain, '-silent'],  # Run subfinder command
-    #         stdout=subprocess.PIPE,
-    #         stderr=subprocess.STDOUT,
-    #         text=True
-    #     )
     def run_scan(domain):
         """Generator function to yield live output of the subfinder command."""
         process = subprocess.Popen(
@@ -46,9 +39,43 @@ def start_scan():
         process.stdout.close()
         # process.wait()
         yield "[ SCAN COMPLETED ]\n\n"
-
     return Response(run_scan(domain), mimetype='text/event-stream')
 
+@app.route('/summary')
+def summary():
+    domain = request.args.get('domain')
+    if not domain:
+        return "No domain provided", 400
+    try:
+        process = subprocess.Popen(
+            ['python3','backend/subdomain_enum.py', domain, '--summary'],  # Run subfinder command
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True
+        )  
+        output, _ = process.communicate()   
+        return  output
+    except json.JSONDecodeError:
+        return {"error": "Invalid JSON output"}, 500
+    
+@app.route('/detailed_results')
+def getable():
+    domain = request.args.get('domain')
+    file_path = f'{domain}_report/live_domain_detail.json'
+    if not domain:
+        return "No domain provided", 400
+    if os.path.exists(file_path):
+        try:
+            with open(file_path,'r')as f:
+                json_content = f.read() 
+            json_objects = [json.loads(line) for line in json_content.strip().split('\n') if line]
+            json_array = json.dumps(json_objects, indent=2)
+            return jsonify(json_array)
+        except json.JSONDecodeError:
+            return {"error": "Invalid JSON output"}, 500
+    else:
+        return {"error":"File not found"},404
+    
 
 # --------------------------------------------------------------------------------------------------
 

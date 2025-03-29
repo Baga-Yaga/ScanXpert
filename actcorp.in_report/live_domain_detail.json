@@ -1,11 +1,39 @@
-{"subdomain":"http://ottblrcdn1.actcorp.in","ip":"49.205.73.10","port":"443","status_code":404,"tech":null}
-{"subdomain":"http://ottblrcdn2.actcorp.in","ip":"49.205.73.11","port":"443","status_code":404,"tech":null}
-{"subdomain":"https://elink.mailer11.actcorp.in","ip":"3.111.132.252","port":"443","status_code":302,"tech":null}
+{"subdomain":"https://actcorp.in","ip":"52.66.101.246","port":"443","status_code":307,"tech":["Apache HTTP Server"]}
+{"subdomain":"http://portal.actcorp.in","ip":"202.53.8.30","port":"80","status_code":302,"tech":["Apache HTTP Server"]}
+{"subdomain":"https://redirect.actcorp.in","ip":"202.53.8.240","port":"443","status_code":200,"tech":null}
+{"subdomain":"https://ottchncdn1.actcorp.in","ip":"103.16.203.202","port":"443","status_code":404,"tech":null}
+{"subdomain":"https://ottblrcdn2.actcorp.in","ip":"49.205.73.11","port":"443","status_code":404,"tech":null}
+{"subdomain":"https://aatuat.actcorp.in","ip":"202.83.20.150","port":"443","status_code":503,"tech":null}
+{"subdomain":"https://exact-blr.actcorp.in","ip":"106.51.41.102","port":"443","status_code":302,"tech":["Java"]}
+{"subdomain":"https://evfileshare-blr.actcorp.in","ip":"49.205.74.11","port":"443","status_code":200,"tech":["Apache HTTP Server"]}
+{"subdomain":"https://apps.actcorp.in","ip":"123.176.37.233","port":"443","status_code":403,"tech":null}
+{"subdomain":"https://wifizone.actcorp.in","ip":"202.53.8.159","port":"443","status_code":302,"tech":["Apache HTTP Server","HSTS","Java"]}
 {"subdomain":"https://img.actcorp.in","ip":"202.53.8.228","port":"443","status_code":403,"tech":null}
 {"subdomain":"https://otthydcdn1.actcorp.in","ip":"183.82.12.10","port":"443","status_code":404,"tech":null}
+{"subdomain":"https://ottblrcdn1.actcorp.in","ip":"49.205.73.10","port":"443","status_code":404,"tech":null}
+{"subdomain":"https://partnerportal.actcorp.in","ip":"202.53.8.209","port":"443","status_code":404,"tech":null}
+{"subdomain":"https://soa-blr.actcorp.in","ip":"106.51.41.116","port":"443","status_code":200,"tech":["Apache HTTP Server","HSTS","PHP:7.2.34"]}
+{"subdomain":"https://digitalpayments-hyd.actcorp.in","ip":"123.176.37.217","port":"443","status_code":200,"tech":["Apache HTTP Server"]}
 {"subdomain":"https://selfcare-blr.actcorp.in","ip":"106.51.41.221","port":"443","status_code":200,"tech":["Bootstrap","Google Tag Manager","Nginx"]}
-{"subdomain":"https://elink.in4.actcorp.in","ip":"65.1.253.119","port":"443","status_code":302,"tech":null}
+{"subdomain":"https://elink.mailer11.actcorp.in","ip":"43.204.68.5","port":"443","status_code":302,"tech":null}
+{"subdomain":"https://vcsc.actcorp.in","ip":"49.206.236.11","port":"443","status_code":200,"tech":["Nginx"]}
+{"subdomain":"https://cmsapi2.actcorp.in","ip":"49.205.74.4","port":"443","status_code":200,"tech":null}
 {"subdomain":"https://myfibernet-blr.actcorp.in","ip":"106.51.41.105","port":"443","status_code":200,"tech":["Apache HTTP Server","HSTS","PHP:7.2.34"]}
-{"subdomain":"https://evfileshare-blr.actcorp.in","ip":"49.205.74.11","port":"443","status_code":200,"tech":["Apache HTTP Server"]}
+{"subdomain":"https://hyfi.actcorp.in","ip":"202.53.8.90","port":"443","status_code":302,"tech":["Java"]}
+{"subdomain":"https://testbot.actcorp.in","ip":"202.53.8.39","port":"443","status_code":404,"tech":null}
+{"subdomain":"https://selfcare.actcorp.in","ip":"106.51.41.221","port":"443","status_code":200,"tech":["Bootstrap","Google Tag Manager","Nginx"]}
+{"subdomain":"https://elink.actcorp.in","ip":"3.109.117.156","port":"443","status_code":302,"tech":null}
+{"subdomain":"https://selfcare-hyd.actcorp.in","ip":"202.53.8.130","port":"443","status_code":200,"tech":["Bootstrap","Google Tag Manager","Nginx"]}
+{"subdomain":"https://bots.actcorp.in","ip":"13.201.208.211","port":"443","status_code":404,"tech":null}
+{"subdomain":"https://elink.in4.actcorp.in","ip":"3.108.242.61","port":"443","status_code":302,"tech":null}
+{"subdomain":"https://alphafibernet.actcorp.in","ip":"106.51.41.15","port":"443","status_code":200,"tech":["Bootstrap","CodeIgniter","PHP:7.2.34","jQuery"]}
+{"subdomain":"https://sdwan-hub.actcorp.in","ip":"123.176.40.30","port":"443","status_code":302,"tech":["HSTS","Nginx"]}
+{"subdomain":"https://actversity.actcorp.in","ip":"3.6.243.61","port":"443","status_code":200,"tech":["HSTS","Microsoft ASP.NET","OWL Carousel","jQuery"]}
+{"subdomain":"https://tiny.actcorp.in","ip":"13.201.208.211","port":"443","status_code":403,"tech":["HSTS"]}
+{"subdomain":"https://myfibernet.actcorp.in","ip":"43.205.84.111","port":"443","status_code":404,"tech":["HSTS","PHP:7.2.34"]}
+{"subdomain":"https://lnk.in4.actcorp.in","ip":"206.183.108.3","port":"443","status_code":404,"tech":["Nginx"]}
+{"subdomain":"https://betafibernet.actcorp.in","ip":"106.51.41.11","port":"443","status_code":200,"tech":["Bootstrap","CodeIgniter","HSTS","PHP","jQuery"]}
 {"subdomain":"https://www.actcorp.in","ip":"64.185.181.238","port":"443","status_code":200,"tech":["Bootstrap","Drupal:10","Google Maps","Google Tag Manager","PHP:8.2.28","Popper","Select2","Slick","crypto-js","jQuery"]}
-{"subdomain":"http://portal.actcorp.in","ip":"202.53.8.30","port":"80","status_code":302,"tech":["Apache HTTP Server"]}
+{"subdomain":"https://actwebdipprd.sap.actcorp.in","ip":"13.201.157.161","port":"443","status_code":503,"tech":null}
+{"subdomain":"http://gisweb.actcorp.in","ip":"123.176.40.184","port":"80","status_code":403,"tech":["Microsoft ASP.NET"]}
+{"subdomain":"https://digitalselfcare.actcorp.in","ip":"13.201.208.211","port":"443","status_code":200,"tech":["Bootstrap","HSTS","PHP:5.4.16","jQuery"]}

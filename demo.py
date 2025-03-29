@@ -1,15 +1,10 @@
-from flask import Flask,render_template
+import json
 
-app = Flask(__name__)
+with open('actcorp.in_report/live_domain_detail.json','r')as f:
+    jsonl_content = f.read()
+# Split lines and parse each JSON object
+json_objects = [json.loads(line) for line in jsonl_content.strip().split('\n') if line]
 
-@app.route('/')
-def hello():
-    return render_template('index.html')
-@app.route('/dorkengin')
-def dork():
-    return render_template('dorking.html')
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
- 
+# Convert to JSON array
+json_array = json.dumps(json_objects, indent=2)
+print(json_array)

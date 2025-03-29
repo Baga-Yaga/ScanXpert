@@ -40,12 +40,12 @@
     <!-- Bottom: Summary Box -->
     <div class="summary-box">
       <h3>Scan Summary</h3>
-      <p>Total Subdomains: <span id="totalSubdomains">0</span></p>
-      <p>Live Subdomains: <span id="liveSubdomains">0</span></p>
-      <p>2xx: <span id="status2xx">0</span></p>
-      <p>3xx: <span id="status3xx">0</span></p>
-      <p>4xx: <span id="status4xx">0</span></p>
-      <p>5xx: <span id="status5xx">0</span></p>
+      <p>Total Subdomains: <span id="totalSubdomains">-</span></p>
+      <p>Live Subdomains: <span id="liveSubdomains">-</span></p>
+      <p>2xx: <span id="status2xx">-</span></p>
+      <p>3xx: <span id="status3xx">-</span></p>
+      <p>4xx: <span id="status4xx">-</span></p>
+      <p>5xx: <span id="status5xx">-</span></p>
     </div>
 
      <!-- Bottom: Results Table -->
@@ -58,20 +58,6 @@
               <th>Status</th>
               <th>Ports</th>
               <th>Technology</th>
-            </tr>
-            <tr>
-                <td>sub1.example.com</td>
-                <td>192.168.1.1</td>
-                <td><span class="status up">Up</span></td>
-                <td>80, 443</td>
-                <td>Nginx, PHP</td>
-            </tr>
-            <tr>
-                <td>sub2.example.com</td>
-                <td>192.168.1.2</td>
-                <td><span class="status down">Down</span></td>
-                <td>-</td>
-                <td>-</td>
             </tr>
           </thead>
           <tbody id="resultBody">
@@ -87,57 +73,84 @@
   </div>
 </div>
 <script>
+  
     function startScan() {
-        const domain = document.getElementById('domainInput').value;
-        if (!domain) {
-            alert("Please enter a domain!");
-            return;
-        }
+      const domain = document.getElementById('domainInput').value;
+      if (!domain) {
+          alert("Please enter a domain!");
+          return;
+      }
+  
+      document.getElementById('loading').style.display = 'block';
+      const consoleBox = document.getElementById('consoleOutput');
+      consoleBox.value = "Scanning started...\n";
+  
+      fetch('/start_scan', {
+          method: 'POST',
+          body: new URLSearchParams({ 'domain': domain }),
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      })
+      .then(response => response.text()) // Wait for the entire response
+      .then(output => {
+          document.getElementById('loading').style.display = 'none';
+          consoleBox.value += "\n" + output; // Append final scan output
+          consoleBox.scrollTop = consoleBox.scrollHeight;
+  
+          // ✅ Now, trigger summary request
+          fetchSummary(domain);
+          fetchResults(domain);
+      })
+      .catch(error => console.error("Error:", error));
+  }
+  
+  // ✅ Fetch Summary Function
+  function fetchSummary(domain) {
+      fetch(`/summary?domain=${domain}`)
+          .then(response => response.json())
+          .then(data => {
+              if (data.error) {
+                  alert("Error: " + data.error);
+                  return;
+              }
 
-            document.getElementById('loading').style.display = 'block';
-            const consoleBox = document.getElementById('consoleOutput');
-            consoleBox.value = "Scanning started...\n";
+              document.getElementById("totalSubdomains").textContent = data.total;
+              document.getElementById("liveSubdomains").textContent = data.live;
+              document.getElementById("status2xx").textContent = data["2xx"];
+              document.getElementById("status3xx").textContent = data["3xx"];
+              document.getElementById("status4xx").textContent = data["4xx"];
+              document.getElementById("status5xx").textContent = data["5xx"];
+          })
+          .catch(error => console.error("Error fetching summary:", error));
+  }
+  function fetchResults(domain) {
+    fetch(`/detailed_results?domain=${domain}`)  // Fetch JSON from backend
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById("resultBody");
+            tableBody.innerHTML = ""; // Clear previous data
 
-        // Start the scan by sending a POST request
-        fetch('/start_scan', {
-            method: 'POST',
-            body: new URLSearchParams({ 'domain': domain }),
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            data.forEach(entry => {
+                const row = document.createElement("tr");
+
+                // Determine status
+                const status = entry.status_code >= 200 && entry.status_code < 300 ? 
+                               '<span class="status up">Up</span>' : 
+                               '<span class="status down">Down</span>';
+
+                // Format technology field
+                const tech = entry.tech ? entry.tech.join(", ") : "-";
+
+                row.innerHTML = `
+                    <td>${entry.subdomain}</td>
+                    <td>${entry.ip}</td>
+                    <td>${status}</td>
+                    <td>${entry.port || "-"}</td>
+                    <td>${tech  ? entry.tech.join(', ') : 'N/A'}</td>
+                `;
+                tableBody.appendChild(row);
+            });
         })
-        .then(response => {
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
-
-            function readChunk() {
-                reader.read().then(({ done, value }) => {
-                    if (done) {
-                        document.getElementById('loading').style.display = 'none';
-                        return;
-                    }
-                    const output = decoder.decode(value);
-                    consoleBox.value += output;
-                    consoleBox.scrollTop = consoleBox.scrollHeight; 
-
-                    if (output.trim().endsWith(domain)) {
-                        const resultsTable = document.getElementById('results');
-                        const newRow = document.createElement('tr');
-                        const newCell = document.createElement('td');
-                        newCell.textContent = output.trim();
-                        newRow.appendChild(newCell);
-                        resultsTable.appendChild(newRow);
-                    }
-                    readChunk();
-                });
-            }
-
-            // Start reading the stream
-            readChunk();
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            // Hide loading indicator
-            document.getElementById('loading').style.display = 'none';
-        });
-    }
+        .catch(error => console.error("Error fetching results:", error));
+}
 </script>
 {% endblock content %}
