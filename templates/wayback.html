@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive & Wayback Data Extraction</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+     <style>
+                /* Fullscreen & Cyberpunk Theme */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background: #000;
+            color: #0f0;
+            text-shadow: 0 0 5px #0f0;
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .outer-container {
+            display: flex;
+            width: 95%;
+            height: 95vh;
+            gap: 20px;
+        }
+
+        /* Left & Right Column */
+        .left-col, .right-col {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            gap: 20px;
+        }
+
+        /* Panels & Boxes */
+        .left-panel, .right-panel, .summary-box, .results-container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #0f0;
+            height: 100%;
+            overflow: auto;
+        }
+
+        /* Console */
+        #consoleOutput {
+            width: 100%;
+            height: 250px;
+            background: black;
+            color: #0f0;
+            border: none;
+            padding: 10px;
+            font-size: 14px;
+            resize: none;
+        }
+
+        /* Input Field */
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            background: black;
+            color: #0f0;
+            border: 1px solid #0f0;
+            margin-bottom: 10px;
+        }
+
+        /* Button */
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #0f0;
+            color: black;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: red;
+            color: white;
+        }
+
+        /* Results Table */
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #0f0;
+        }
+
+        .result-table th, .result-table td {
+            border: 1px solid #0f0;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Pagination */
+        .pagination {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+
+     </style>
+</head>
+<div class="outer-container">
+    <!-- Left Column -->
+    <div class="left-col">
+        <div class="left-panel">    
+            <h2>Archive & Wayback Data Extraction</h2>
+            <input type="text" id="domainInput" placeholder="Enter domain...">
+            <button id="scanButton" onclick="startScan()">Start Scan</button>
+            <div class="loading" id="loading" style="display: none;">Scanning...</div>
+            <div class="quick-guide">
+                <h3>How to Use:</h3>
+                <ul>
+                    <li>Enter the target domain (e.g., example.com).</li>
+                    <li>Click "Start Scan" to fetch archived URLs.</li>
+                    <li>Monitor the console output for real-time results.</li>
+                    <li>Review the extracted URLs in the table below.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <p><strong>Console Output:</strong></p>
+            <textarea id="consoleOutput" readonly></textarea>
+        </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="right-col">
+        <div class="summary-box">
+            <h3>Scan Summary</h3>
+            <p>Total URLs Found: <span id="totalUrls">0</span></p>
+        </div>
+
+        <div class="results-container">
+            <table class="result-table" id="resultTable">
+                <thead>
+                    <tr>
+                        <th>Extracted URL</th>
+                    </tr>
+                </thead>
+                <tbody id="resultBody"></tbody>
+            </table>
+            <p id="noResults" style="display: none; text-align: center;">No URLs found.</p>
+            <div class="pagination">
+                <button id="prevPage" onclick="changePage(-1)" disabled>Prev</button>
+                <span id="pageIndicator"></span>
+                <button id="nextPage" onclick="changePage(1)" disabled>Next</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let allUrls = [];
+    let currentPage = 1;
+    const pageSize = 10;
+
+    async function startScan() {
+        const domain = document.getElementById('domainInput').value.trim();
+        if (!domain) {
+            alert("Please enter a domain!");
+            return;
+        }
+    
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('consoleOutput').value = "Fetching archived URLs...\n";
+    
+        try {
+            const response = await fetch(`http://127.0.0.1:5000/fetch_wayback`, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ domain })
+            });
+    
+            if (!response.ok) {
+                throw new Error("Failed to fetch URLs.");
+            }
+    
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let consoleOutput = document.getElementById("consoleOutput");
+            let resultBody = document.getElementById("resultBody");
+    
+            consoleOutput.value = "";
+            resultBody.innerHTML = "";  // Clear previous results
+            allUrls = [];
+    
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                let chunk = decoder.decode(value);
+                consoleOutput.value += chunk;
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    
+                let urls = chunk.match(/https?:\/\/[^\s]+/g);  // Extract URLs
+                if (urls) {
+                    allUrls.push(...urls);
+                }
+            }
+    
+            displayTable(1);  // Display first page of results
+            document.getElementById("totalUrls").innerText = allUrls.length;
+            document.getElementById('loading').style.display = 'none';
+        } catch (error) {
+            document.getElementById('consoleOutput').value += "Error fetching URLs!\n";
+            console.error(error);
+        }
+    }
+    
+    function displayTable(page) {
+        const resultBody = document.getElementById("resultBody");
+        resultBody.innerHTML = "";  // Clear existing table rows
+    
+        const startIndex = (page - 1) * pageSize;
+        const paginatedUrls = allUrls.slice(startIndex, startIndex + pageSize);
+    
+        paginatedUrls.forEach(url => {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td><a href="${url}" target="_blank">${url}</a></td>`;
+            resultBody.appendChild(row);
+        });
+    
+        currentPage = page;
+        document.getElementById("pageIndicator").innerText = `Page ${currentPage} of ${Math.ceil(allUrls.length / pageSize)}`;
+        updatePaginationButtons();
+    }
+    
+    
+    
+
+    function displayResults() {
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+        const paginatedUrls = allUrls.slice(start, end);
+
+        const resultBody = document.getElementById('resultBody');
+        resultBody.innerHTML = "";
+
+        paginatedUrls.forEach(url => {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td><a href="${url}" target="_blank">${url}</a></td>`;
+            resultBody.appendChild(row);
+        });
+
+        document.getElementById("pageIndicator").innerText = `Page ${currentPage} of ${Math.ceil(allUrls.length / pageSize)}`;
+        updatePaginationButtons();
+    }
+
+    function changePage(step) {
+        const totalPages = Math.ceil(allUrls.length / pageSize);
+        const newPage = currentPage + step;
+    
+        if (newPage >= 1 && newPage <= totalPages) {
+            currentPage = newPage;  // Update current page
+            displayTable(currentPage);
+        }
+    }
+    
+
+    function updatePaginationButtons() {
+        const totalPages = Math.ceil(allUrls.length / pageSize);
+        document.getElementById("prevPage").disabled = (currentPage === 1);
+        document.getElementById("nextPage").disabled = (currentPage >= totalPages);
+    }
+</script>
+
+</body>
+</html>
