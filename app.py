@@ -3,7 +3,7 @@ import socket
 from flask import Flask, jsonify, request, render_template, Response
 import subprocess, json
 from backend import *
-from flask_cors import CORS
+from flask_cors import CORS # type: ignore
 
 app = Flask(__name__, template_folder='templates', static_folder='/', static_url_path='/')
 CORS(app)

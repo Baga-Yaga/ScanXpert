@@ -64,11 +64,11 @@
             <!-- Dynamically generated rows go here -->
           </tbody>
         </table>
-        <!--<div class="pagination">
-          <button id="prevPage" onclick="changePage(-1)">Prev</button>
-          <span id="pageIndicator"></span>
-          <button id="nextPage" onclick="changePage(1)">Next</button>
-        </div>-->
+        <div class="pagination-controls">
+          <button id="prevBtn" disabled>Previous</button>
+          <span id="pageInfo">Showing 0-0 of 0</span>
+          <button id="nextBtn" disabled>Next</button>
+      </div>
       </div>
   </div>
 </div>
@@ -122,7 +122,7 @@
           })
           .catch(error => console.error("Error fetching summary:", error));
   }
-  function fetchResults(domain) {
+  /** function fetchResults(domain) {
     fetch(`/detailed_results?domain=${domain}`)
         .then(response => response.json())
         .then(data => {
@@ -168,6 +168,84 @@
                 </tr>
             `;
         });
+} **/
+let currentPage = 1;
+const recordsPerPage = 10;
+let allData = []; // Store all fetched data
+
+function fetchResults(domain) {
+    fetch(`/detailed_results?domain=${domain}`)
+        .then(response => response.json())
+        .then(data => {
+            allData = data; // Store all data
+            currentPage = 1; // Reset to first page
+            displayPage(currentPage);
+            updatePaginationControls();
+        })
+        .catch(handleFetchError);
 }
+
+function displayPage(page) {
+    const tableBody = document.getElementById("resultBody");
+    tableBody.innerHTML = "";
+
+    const startIndex = (page - 1) * recordsPerPage;
+    const endIndex = Math.min(startIndex + recordsPerPage, allData.length);
+    const pageData = allData.slice(startIndex, endIndex);
+
+    pageData.forEach(entry => {
+        const row = document.createElement("tr");
+        
+        const statusClass = entry.status_code >= 200 && entry.status_code < 300 ? 'up' : 'down';
+        const statusText = entry.status_code >= 200 && entry.status_code < 300 ? 'Up' : 'Down';
+        
+        row.innerHTML = `
+            <td>${entry.subdomain || "-"}</td>
+            <td>${entry.ip || "-"}</td>
+            <td><span class="status ${statusClass}">${statusText} (${entry.status_code})</span></td>
+            <td>${entry.port || "-"}</td>
+            <td>${entry.tech ? entry.tech.join(", ") : "N/A"}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+
+    // Update page info
+    document.getElementById("pageInfo").textContent = 
+        `Showing ${startIndex + 1}-${endIndex} of ${allData.length}`;
+}
+
+function updatePaginationControls() {
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = currentPage >= Math.ceil(allData.length / recordsPerPage);
+}
+
+function handleFetchError(error) {
+    console.error("Error fetching results:", error);
+    document.getElementById("resultBody").innerHTML = `
+        <tr>
+            <td colspan="5" class="error">Error loading results: ${error.message}</td>
+        </tr>
+    `;
+}
+
+// Event listeners for pagination buttons
+document.getElementById("prevBtn").addEventListener("click", () => {
+    if (currentPage > 1) {
+        currentPage--;
+        displayPage(currentPage);
+        updatePaginationControls();
+    }
+});
+
+document.getElementById("nextBtn").addEventListener("click", () => {
+    if (currentPage < Math.ceil(allData.length / recordsPerPage)) {
+        currentPage++;
+        displayPage(currentPage);
+        updatePaginationControls();
+    }
+});
 </script>
 {% endblock content %}

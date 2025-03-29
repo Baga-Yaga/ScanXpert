@@ -130,9 +130,21 @@ button:hover {
 }
 
 /* Pagination */
-.pagination {
-  text-align: center;
-  margin-top: 10px;
+.pagination-controls {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.pagination-controls button {
+  padding: 5px 15px;
+  cursor: pointer;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Summary Box */
