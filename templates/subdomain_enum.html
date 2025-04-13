@@ -90,7 +90,7 @@
           body: new URLSearchParams({ 'domain': domain }),
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       })
-      .then(response => response.text()) // Wait for the entire response
+      .then(response => response.text()) 
       .then(output => {
           document.getElementById('loading').style.display = 'none';
           consoleBox.value += "\n" + output; // Append final scan output
