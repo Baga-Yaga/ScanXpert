@@ -1,133 +1,224 @@
-{% extends "basetemplate.html" %}
-{% block title %} Network Scanner {% endblock title %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Scanner</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/netfuzzer.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', monospace;
+            background: url('https://source.unsplash.com/1600x900/?cyberpunk,hacking,technology') no-repeat center center fixed;
+            background-size: cover;
+            background: rgba(0, 0, 0, 0.8);
+            color: #0f0;
+            text-shadow: 0 0 2px #0f0;
+        }
 
-<div class="container">
-    <div class="net_left">
-        <div class="net_form">
-            <!-- FIXED: Added id="target" -->
-            <input type="text" id="target" placeholder="Enter Domain or IP">
-            <form>
-                <p>Select:</p>
-                <input type="radio" id="simple" name="fav_scan" value="Simple">
-                <label for="simple">Simple</label><br>
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 5px 30px;
+            box-shadow: 0 0 7px #0f0;
+            position: relative;
+        }
 
-                <input type="radio" id="moderate" name="fav_scan" value="Moderate">
-                <label for="moderate">Moderate</label><br>
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
 
-                <input type="radio" id="deep" name="fav_scan" value="Deep">
-                <label for="deep">Deep</label>
-            </form>
+        .navbar-left img {
+            height: 70px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
 
-            <button onclick="scan()">Scan</button>
+        .navbar-right {
+            display: flex;
+            position: relative;
+            /* padding-bottom: 10x; */
+            align-items: flex-end;
+        }
+
+        .navbar a {
+            color: #0f0;
+            text-decoration: none;
+            padding: 5px 15px;
+            margin: 0 5px;
+            font-weight: bold;
+            transition: 0.3s;
+            position: relative;
+            z-index: 2;
+            margin-bottom: -30px;
+        }
+
+        .navbar a:hover {
+            color: #fff;
+            text-shadow: 0 0 7px #0f0;
+        }
+
+        .navbar-underline {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            height: 40px;
+            background: linear-gradient(to top, rgba(0, 255, 0, 1), rgba(0, 255, 0, 0));
+            transition: all 1s ease;
+            width: 0;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <img src="../static/img/logo1.png" id="myImage" alt="logo">
+        </div>
+        <div class="navbar-right">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/subdomain_enum">Subdomain_Enum</a>
+            <a href="/network_scan">Network_Fuzzer</a>
+            <a href="/url-fuzzer">URL_Fuzzer</a>
+            <a href="/dorking">Google_Dorking</a>
+            <a href="/bug-scanner">Bug_Scanner</a>
+            <a href="/Wayback">Wayback</a>
+            <a href="/about">About</a>
+            <div class="navbar-underline"></div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="net_left">
+            <div class="net_form">
+                <!-- FIXED: Added id="target" -->
+                <input type="text" id="target" placeholder="Enter Domain or IP">
+                <form>
+                    <p>Select:</p>
+                    <input type="radio" id="simple" name="fav_scan" value="Simple">
+                    <label for="simple">Simple</label><br>
+
+                    <input type="radio" id="moderate" name="fav_scan" value="Moderate">
+                    <label for="moderate">Moderate</label><br>
+
+                    <input type="radio" id="deep" name="fav_scan" value="Deep">
+                    <label for="deep">Deep</label>
+                </form>
+
+                <button onclick="scan()">Scan</button>
+            </div>
+
+            <div class="top-triangle">
+                <img src="../static/img/hollywood.gif" alt="hollywood.gif">
+            </div>
+            <div class="net_right">
+                <img src="../static/img/hollywood.gif" alt="hollywood.gif">
+            </div>
         </div>
 
-        <div class="top-triangle">
-            <img src="../static/img/hollywood.gif" alt="hollywood.gif">
-        </div>
-        <div class="net_right">
-            <img src="../static/img/hollywood.gif" alt="hollywood.gif">
+        <!-- Right side: Command Interface -->
+        <div class="net_cli">
+            <textarea name="cli" id="area_cli">Command Interface</textarea>
         </div>
     </div>
 
-    <!-- Right side: Command Interface -->
-    <div class="net_cli">
-        <textarea name="cli" id="area_cli">Command Interface</textarea>
+    <div class="net_view">
+        <table id="scanResults">
+            <thead>
+                <!-- FIXED: Added id="tableHead" -->
+                <tr id="tableHead">
+                    <th>Port</th>
+                    <th>Service</th>
+                    <th>Status</th>
+                    <th>Version</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Results will be populated here -->
+            </tbody>
+        </table>
     </div>
-</div>
 
-<div class="net_view">
-    <table id="scanResults">
-        <thead>
-            <!-- FIXED: Added id="tableHead" -->
-            <tr id="tableHead">
-                <th>Port</th>
-                <th>Service</th>
-                <th>Status</th>
-                <th>Version</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Results will be populated here -->
-        </tbody>
-    </table>
-</div>
+    <script>
+        function scan() {
+            let scanType = document.querySelector('input[name="fav_scan"]:checked')?.value;
+            if (!scanType) {
+                alert("Please select a scan type.");
+                return;
+            }
 
-<script>
-    function scan() {
-        let scanType = document.querySelector('input[name="fav_scan"]:checked')?.value;
-        if (!scanType) {
-            alert("Please select a scan type.");
-            return;
-        }
-    
-        let target = document.getElementById('target').value;
-        if (!target) {
-            alert("Please enter a target (Domain or IP).");
-            return;
-        }
-    
-        document.getElementById('area_cli').textContent = `nmap -${scanType.toLowerCase()} ${target}`;
-    
-        document.getElementById('scanResults').setAttribute('data-scan-type', scanType);
-    
-        let headers = ['Port', 'Service', 'Status', 'Version', 'Description'];
-        if (scanType === 'Moderate') {
-            headers.push('OS Discovery');
-        } else if (scanType === 'Deep') {
-            headers.push('OS Discovery', 'Script');
-        }
-    
-        // Update table headers
-        let tableHead = document.getElementById('tableHead');
-        tableHead.innerHTML = '';
-        headers.forEach(header => {
-            let th = document.createElement('th');
-            th.textContent = header;
-            tableHead.appendChild(th);
-        });
-    
-        let results = [];
-        if (scanType === "Simple") {
-            results = [
-                { port: 80, service: "HTTP", status: "Open", version: "Apache/2.4.29", description: "Web server" },
-                { port: 22, service: "SSH", status: "Closed", version: "-", description: "Secure shell" }
-            ];
-        } else if (scanType === "Moderate") {
-            results = [
-                { port: 22, service: "SSH", status: "Open", version: "OpenSSH 7.6p1", description: "Secure shell", osDiscovery: "Linux" },
-                { port: 445, service: "SMB", status: "Open", version: "Windows Server 2019", description: "File sharing", osDiscovery: "Windows" }
-            ];
-        } else if (scanType === "Deep") {
-            results = [
-                { port: 443, service: "HTTPS", status: "Open", version: "nginx 1.14.0", description: "Secure web server", osDiscovery: "Linux", script: "CVE-2021-34527" },
-                { port: 21, service: "FTP", status: "Open", version: "vsftpd 3.0.3", description: "File transfer", osDiscovery: "Linux", script: "CVE-2015-1415" }
-            ];
-        }
-    
-        let tbody = document.querySelector("#scanResults tbody");
-        tbody.innerHTML = '';
-    
-        results.forEach(result => {
-            let row = document.createElement('tr');
+            let target = document.getElementById('target').value;
+            if (!target) {
+                alert("Please enter a target (Domain or IP).");
+                return;
+            }
+
+            document.getElementById('area_cli').textContent = `nmap -${scanType.toLowerCase()} ${target}`;
+
+            document.getElementById('scanResults').setAttribute('data-scan-type', scanType);
+
+            let headers = ['Port', 'Service', 'Status', 'Version', 'Description'];
+            if (scanType === 'Moderate') {
+                headers.push('OS Discovery');
+            } else if (scanType === 'Deep') {
+                headers.push('OS Discovery', 'Script');
+            }
+
+            // Update table headers
+            let tableHead = document.getElementById('tableHead');
+            tableHead.innerHTML = '';
             headers.forEach(header => {
-                let td = document.createElement('td');
-    
-                let key = header
-                    .replace(/ /g, '')
-                    .replace(/Discovery/, 'osDiscovery') 
-                    .replace(/Script/, 'script'); 
-    
-                td.textContent = result[key] || '-';
-                row.appendChild(td);
+                let th = document.createElement('th');
+                th.textContent = header;
+                tableHead.appendChild(th);
             });
-            tbody.appendChild(row);
-        });
-    }
-    
-    
-</script>
 
-{% endblock content %}
+            let results = [];
+            if (scanType === "Simple") {
+                results = [
+                    { port: 80, service: "HTTP", status: "Open", version: "Apache/2.4.29", description: "Web server" },
+                    { port: 22, service: "SSH", status: "Closed", version: "-", description: "Secure shell" }
+                ];
+            } else if (scanType === "Moderate") {
+                results = [
+                    { port: 22, service: "SSH", status: "Open", version: "OpenSSH 7.6p1", description: "Secure shell", osDiscovery: "Linux" },
+                    { port: 445, service: "SMB", status: "Open", version: "Windows Server 2019", description: "File sharing", osDiscovery: "Windows" }
+                ];
+            } else if (scanType === "Deep") {
+                results = [
+                    { port: 443, service: "HTTPS", status: "Open", version: "nginx 1.14.0", description: "Secure web server", osDiscovery: "Linux", script: "CVE-2021-34527" },
+                    { port: 21, service: "FTP", status: "Open", version: "vsftpd 3.0.3", description: "File transfer", osDiscovery: "Linux", script: "CVE-2015-1415" }
+                ];
+            }
+
+            let tbody = document.querySelector("#scanResults tbody");
+            tbody.innerHTML = '';
+
+            results.forEach(result => {
+                let row = document.createElement('tr');
+                headers.forEach(header => {
+                    let td = document.createElement('td');
+
+                    let key = header
+                        .replace(/ /g, '')
+                        .replace(/Discovery/, 'osDiscovery')
+                        .replace(/Script/, 'script');
+
+                    td.textContent = result[key] || '-';
+                    row.appendChild(td);
+                });
+                tbody.appendChild(row);
+            });
+        }
+
+
+    </script>
+</body>
+
+</html>
