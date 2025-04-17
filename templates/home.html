@@ -1,134 +1,1040 @@
-{% extends "basetemplate.html" %}
-{% block title %}ScanXpert{% endblock title %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScanXpert</title>
+    <style>
+        :root {
+            --primary: #00ff88;
+            --secondary: #00ccff;
+            --dark: #1a1a1a;
+            --light: #ffffff;
+        }
 
-{% block content %}
-<style>
-    .main {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 50px;
-        min-height: 80vh;
-      }
-    
-      .div1 {
-        max-width: 50%;
-        color: #0f0;
-        text-shadow: 0 0 5px #0f0, 0 0 10 px #008000;
-        animation: fadeIn 1.5s ease-in-out;
-      }
-    
-      #heading {
-        font-size: 2.5rem;
-        margin-bottom: 15px;
-      }
-    
-      .div1 p {
-        font-size: 1.2rem;
-        color: #bbb;
-      }
-    
-      .div1 ul {
-        list-style: none;
-        padding: 0;
-      }
-    
-      .div1 li {
-        font-size: 1.2rem;
-        margin: 10px 0;
-        display: flex;
-        align-items: center;
-      }
-    
-      .div1 li::before {
-        content: "✔";
-        color: #0f0;
-        margin-right: 10px;
-        text-shadow: 0 0 3px #0f0;
-      }
-    
-      .div1 button {
-        background: #0f0;
-        color: #000;
-        border: none;
-        padding: 12px 25px;
-        font-size: 1.2rem;
-        cursor: pointer;
-        margin-top: 20px;
-        border-radius: 5px;
-        text-transform: uppercase;
-        font-weight: bold;
-        transition: 0.3s ease-in-out;
-        box-shadow: 0 0 10px #0f0, 0 0 10px #008000;
-      }
-    
-      .div1 button:hover {
-        background: #fff;
-        color: #000;
-        box-shadow: 0 0 10px #fff, 0 0 10px #0f0;
-      }
-    
-      .div2 {
-        max-width: 50%;
-      }
-    
-      .div2 img {
-        width: 100%;
-        height: auto;
-        border-radius: 10px;
-        box-shadow: 0 0 10px #0f0;
-        animation: glow 1.5s infinite alternate;
-      }
-    
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        to {
-          opacity: 1;
-          transform: translateY(0);
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: var(--light);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
-      }
-    
-      @keyframes glow {
-        from {
-          box-shadow: 0 0 10px #0f0;
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
         }
-        to {
-          box-shadow: 0 0 10px #0f0;
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 1rem 2rem;
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 255, 136, 0.1);
+            transition: all 0.3s ease;
         }
-      }
-    
-      @media (max-width: 768px) {
+
+        .navbar:hover {
+            background: rgba(0, 0, 0, 0.95);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-left img {
+            height: 45px;
+            margin-right: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-left img:hover {
+            transform: scale(1.05);
+        }
+
+        .navbar-right {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: var(--light);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: var(--primary);
+        }
+
+        .navbar a:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1001;
+        }
+
+        .mobile-menu-btn span {
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: translateY(9.5px) rotate(45deg);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: translateY(-9.5px) rotate(-45deg);
+        }
+
         .main {
-          flex-direction: column;
-          text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8rem 6rem 4rem;
+            position: relative;
+            z-index: 2;
+            gap: 4rem;
         }
-        .div1, .div2 {
-          max-width: 100%;
+
+        .div1 {
+            flex: 1;
+            max-width: 600px;
         }
+
+        #heading {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 1s ease;
+        }
+
+        .div1 p {
+            font-size: 1.1rem;
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease 0.2s backwards;
+        }
+
+        .div1 ul {
+            list-style: none;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.4s backwards;
+        }
+
+        .div1 li {
+            font-size: 1.1rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            color: #d0d0d0;
+        }
+
+        .div1 li::before {
+            content: "✓";
+            color: var(--primary);
+            margin-right: 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
         .div1 button {
-          width: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: fadeInUp 1s ease 0.6s backwards;
+            position: relative;
+            overflow: hidden;
         }
-      }
-    
-</style>
-<div class="main">
-    <div class="div1">
-        <h1 id="heading">Uncover Hidden Vulnerabilities Before They Exploit You</h1>
-        <p>Our ScanXpert Platform empowers penetration testers and developers...</p>
-        <ul>
-            <li>✅ Automate Attack Surface Mapping</li>
-            <li>✅ Scan for Critical Vulnerabilities</li>
-            <li>✅ Assess Real-World Risks</li>
-            <li>✅ Generate Reports in Minutes</li>
-        </ul>
-        <button>Hack Smarter</button>
+
+        .div1 button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .div1 button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .div1 button:hover::before {
+            left: 100%;
+        }
+
+        .div2 {
+            flex: 1;
+            max-width: 600px;
+            animation: fadeInRight 1s ease 0.8s backwards;
+            position: relative;
+        }
+
+        .security-graphic {
+            width: 100%;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .shield {
+            width: 200px;
+            height: 240px;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .shield-body {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .shield-inner {
+            width: 90%;
+            height: 90%;
+            background: rgba(0, 0, 0, 0.8);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .shield-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .circuit-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .circuit-line {
+            position: absolute;
+            background: var(--primary);
+            opacity: 0.3;
+        }
+
+        .line-1 {
+            width: 2px;
+            height: 100px;
+            left: 30%;
+            animation: circuitFlow 3s infinite;
+        }
+
+        .line-2 {
+            width: 100px;
+            height: 2px;
+            top: 40%;
+            right: 20%;
+            animation: circuitFlow 2.5s infinite 0.5s;
+        }
+
+        .line-3 {
+            width: 2px;
+            height: 80px;
+            right: 35%;
+            bottom: 20%;
+            animation: circuitFlow 3.5s infinite 1s;
+        }
+
+        .binary-rain {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .binary {
+            position: absolute;
+            color: var(--primary);
+            font-family: monospace;
+            font-size: 14px;
+            opacity: 0;
+            animation: binaryDrop 3s linear infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes circuitFlow {
+            0% {
+                opacity: 0.1;
+                transform: translateY(0);
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 0.1;
+                transform: translateY(20px);
+            }
+        }
+
+        @keyframes binaryDrop {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main {
+                padding: 7rem 3rem 3rem;
+                gap: 2rem;
+            }
+            
+            #heading {
+                font-size: 2.8rem;
+            }
+
+            .navbar {
+                padding: 1rem;
+            }
+
+            .navbar a {
+                font-size: 0.9rem;
+                padding: 0.5rem 0.75rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main {
+                flex-direction: column;
+                text-align: center;
+                padding: 6rem 2rem 2rem;
+            }
+
+            .navbar {
+                padding: 1rem;
+            }
+
+            .navbar-right {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                height: 100vh;
+                width: 100%;
+                max-width: 300px;
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                justify-content: center;
+                gap: 2rem;
+                padding: 2rem;
+                transition: right 0.3s ease;
+            }
+
+            .navbar-right.active {
+                right: 0;
+            }
+
+            .navbar a {
+                font-size: 1.1rem;
+                width: 100%;
+                text-align: center;
+            }
+
+            .navbar a::before {
+                display: none;
+            }
+
+            .navbar a::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 0;
+                height: 2px;
+                background: linear-gradient(90deg, var(--primary), var(--secondary));
+                transition: width 0.3s ease;
+            }
+
+            .navbar a:hover::after {
+                width: 100%;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        /* Additional sections styling */
+        .section {
+            padding: 6rem 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
+        }
+
+        .feature-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .feature-description {
+            color: #a0a0a0;
+            line-height: 1.6;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #a0a0a0;
+            font-size: 1rem;
+        }
+
+        .workflow-section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .workflow-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            position: relative;
+        }
+
+        .workflow-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary);
+            opacity: 0.3;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .workflow-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .workflow-content p {
+            color: #a0a0a0;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1024px) {
+            .section {
+                padding: 4rem 2rem;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .workflow-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                padding: 3rem 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        .cta-section {
+            text-align: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                        radial-gradient(circle at center, var(--primary) 0%, transparent 70%);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            margin: 4rem auto;
+            max-width: 1200px;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .cta-description {
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cta-button {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        @media (max-width: 768px) {
+            .cta-section {
+                margin: 2rem 1rem;
+                padding: 3rem 1.5rem;
+            }
+
+            .cta-title {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .cta-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <img src="../static/img/logo1.png" id="myImage" alt="ScanXpert Logo">
+        </div>
+        <button class="mobile-menu-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="navbar-right">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/subdomain_enum">Subdomain Enum</a>
+            <a href="/network_scan">Network Fuzzer</a>
+            <a href="/url-fuzzer">URL Fuzzer</a>
+            <a href="/dorking">Google Dorking</a>
+            <a href="/bug-scanner">Bug Scanner</a>
+            <a href="/Wayback">Wayback</a>
+            <a href="/about">About</a>
+        </div>
+    </nav>
+    <div class="main">
+        <div class="div1">
+            <h1 id="heading">Uncover Hidden Vulnerabilities Before They Exploit You</h1>
+            <p>Our ScanXpert Platform empowers penetration testers and developers with advanced security scanning capabilities, helping you stay one step ahead of potential threats.</p>
+            <ul>
+                <li>Automate Attack Surface Mapping</li>
+                <li>Scan for Critical Vulnerabilities</li>
+                <li>Assess Real-World Risks</li>
+                <li>Generate Reports in Minutes</li>
+            </ul>
+            <button>Start Scanning</button>
+        </div>
+        <div class="div2">
+            <div class="security-graphic">
+                <div class="binary-rain" id="binaryRain"></div>
+                <div class="circuit-lines">
+                    <div class="circuit-line line-1"></div>
+                    <div class="circuit-line line-2"></div>
+                    <div class="circuit-line line-3"></div>
+                </div>
+                <div class="shield">
+                    <div class="shield-body">
+                        <div class="shield-inner">
+                            <i class="shield-icon">🔒</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="div2">
-        <img src="../static/img/photo_2025-02-19_23-59-41.jpg" alt="" id="kali">
-    </div>
-</div>
-{% endblock content %}
+    <!-- Features Section -->
+    <section class="section">
+        <h2 class="section-title">Powerful Security Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3 class="feature-title">Subdomain Enumeration</h3>
+                <p class="feature-description">Discover hidden subdomains and map the complete attack surface of your target domain using advanced enumeration techniques.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌐</div>
+                <h3 class="feature-title">Network Fuzzing</h3>
+                <p class="feature-description">Identify vulnerabilities in network protocols and services with our intelligent fuzzing engine.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3 class="feature-title">URL Fuzzing</h3>
+                <p class="feature-description">Uncover hidden endpoints and potential security flaws in web applications through comprehensive URL fuzzing.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔎</div>
+                <h3 class="feature-title">Google Dorking</h3>
+                <p class="feature-description">Leverage advanced search techniques with AI-powered dork generation to find sensitive information exposure.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🐛</div>
+                <h3 class="feature-title">Bug Scanner</h3>
+                <p class="feature-description">Automatically detect common vulnerabilities and security misconfigurations in web applications.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <h3 class="feature-title">Wayback Analysis</h3>
+                <p class="feature-description">Analyze historical versions of websites to identify previously exposed sensitive information and endpoints.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section">
+        <h2 class="section-title">ScanXpert in Numbers</h2>
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number" id="vulnCount">0</div>
+                <div class="stat-label">Vulnerabilities Found</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="scanCount">0</div>
+                <div class="stat-label">Scans Completed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="subdomainCount">0</div>
+                <div class="stat-label">Subdomains Discovered</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="userCount">0</div>
+                <div class="stat-label">Security Teams</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section class="section workflow-section">
+        <h2 class="section-title">How It Works</h2>
+        <div class="workflow-grid">
+            <div class="workflow-item">
+                <div class="workflow-number">1</div>
+                <div class="workflow-content">
+                    <h3>Target Analysis</h3>
+                    <p>Input your target domain and let ScanXpert analyze the attack surface, discovering all accessible endpoints and potential entry points.</p>
+                </div>
+            </div>
+            <div class="workflow-item">
+                <div class="workflow-number">2</div>
+                <div class="workflow-content">
+                    <h3>Automated Scanning</h3>
+                    <p>Our intelligent scanning engine performs comprehensive security tests across all discovered assets using multiple scanning techniques.</p>
+                </div>
+            </div>
+            <div class="workflow-item">
+                <div class="workflow-number">3</div>
+                <div class="workflow-content">
+                    <h3>Results & Reporting</h3>
+                    <p>Receive detailed reports with actionable insights, vulnerability descriptions, and recommended remediation steps.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="section">
+        <div class="cta-section">
+            <h2 class="cta-title">Ready to Secure Your Applications?</h2>
+            <p class="cta-description">Join hundreds of security teams who trust ScanXpert to discover and protect against vulnerabilities. Start scanning your applications today and stay ahead of potential threats.</p>
+            <div class="cta-buttons">
+                <a href="/dashboard" class="cta-button">Start Scanning Now</a>
+                <a href="/about" class="cta-button secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#00ff88' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: false },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#00ff88',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
+
+        // Create binary rain effect
+        function createBinaryRain() {
+            const container = document.getElementById('binaryRain');
+            const characters = '01';
+            
+            function createBinary() {
+                const binary = document.createElement('div');
+                binary.className = 'binary';
+                binary.style.left = Math.random() * 100 + '%';
+                binary.style.animationDelay = Math.random() * 2 + 's';
+                binary.textContent = characters.charAt(Math.floor(Math.random() * characters.length));
+                container.appendChild(binary);
+                
+                setTimeout(() => {
+                    binary.remove();
+                }, 3000);
+            }
+
+            setInterval(createBinary, 200);
+        }
+
+        createBinaryRain();
+
+        // Mobile menu functionality
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navbarRight = document.querySelector('.navbar-right');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuBtn.classList.toggle('active');
+            navbarRight.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuBtn.contains(e.target) && !navbarRight.contains(e.target)) {
+                mobileMenuBtn.classList.remove('active');
+                navbarRight.classList.remove('active');
+            }
+        });
+
+        // Hide navbar on scroll down, show on scroll up
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                navbar.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+
+        // Animate stats numbers
+        function animateStats() {
+            const stats = {
+                vulnCount: { target: 15000, current: 0 },
+                scanCount: { target: 50000, current: 0 },
+                subdomainCount: { target: 1000000, current: 0 },
+                userCount: { target: 500, current: 0 }
+            };
+
+            for (const [id, data] of Object.entries(stats)) {
+                const element = document.getElementById(id);
+                const increment = Math.ceil(data.target / 100);
+                
+                const interval = setInterval(() => {
+                    if (data.current >= data.target) {
+                        element.textContent = data.target.toLocaleString();
+                        clearInterval(interval);
+                    } else {
+                        data.current += increment;
+                        element.textContent = data.current.toLocaleString();
+                    }
+                }, 20);
+            }
+        }
+
+        // Animate stats when they come into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateStats();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        observer.observe(document.querySelector('.stats-container'));
+    </script>
+</body>
+</html>
