@@ -7,7 +7,7 @@ def subdomain_enum(domain):
     output_file = os.path.join(output_dir,"tmpdomain")
     print("Fetching subdomains using subfinder...")
     subprocess.run(
-        f"subfinder -d {domain} -recursive -all -silent >> {output_file}",
+        f"subfinder -d {domain} -recursive -all -silent > {output_file}",
         shell=True,
         check=True
     )
@@ -36,14 +36,14 @@ def subdomain_enum(domain):
     print("\n[.] Extracting active subdomains...")
     active_file = f"{output_dir}/activesubs"
     subprocess.run(
-        f"cat {output_file} | httpx -silent >> {active_file}",
+        f"cat {output_file} | httpx -silent > {active_file}",
         shell=True,
         check=True
     )
     
     jsonfile = f"{output_dir}/live_domain_detail.json"
     subprocess.run(
-        "cat "+ active_file + "| httpx -silent -j | jq -c '{subdomain:.input,ip:.host,port:.port,status_code:.status_code,tech:.tech}'  >> " + jsonfile ,
+        "cat "+ active_file + "| httpx -silent -j | jq -c '{subdomain:.input,ip:.host,port:.port,status_code:.status_code,tech:.tech}'  > " + jsonfile ,
         shell=True,
         check=True
     )
