@@ -1,11 +1,14 @@
 {% extends "basetemplate.html" %}
 {% block title %}Wayback URL Scanner{% endblock %}
+{% block link %}
+<link rel="stylesheet" href="../static/css//wayback.css">
+{% endblock %}
 {% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/wayback.css') }}">
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/wayback.css') }}"> -->
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container" style="margin-top: 7rem;">
     <div class="sidebar">
         <h2>Wayback Scanner</h2>
         <div class="input-group">

@@ -1,133 +1,168 @@
-{% extends "basetemplate.html" %}
-{% block title %}Network_Fuzzer{% endblock %}
-{% block head %}
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Network Enumeration - Hacker Mode</title>
+    <link rel="stylesheet" href="../static/css/nwenum.css" />
+            
+<script type="module" src="https://md-block.verou.me/md-block.js"></script>
 
-{% block content %}
+    
+  </head>
+  <body style="margin-top: 7rem">
+    <nav class="navbar">
+      <div class="navbar-left">
+        <img src="../static/img/logo1.png" id="myImage" alt="ScanXpert Logo" />
+      </div>
+      <button class="mobile-menu-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div class="navbar-right">
+        <a href="/subdomain_enum">Subdomain_Enum</a>
+        <a href="/network_scan">Network_Fuzzer</a>
+        <a href="/url_fuzzer">URL_Fuzzer</a>
+        <a href="/dorking">Google_Dorking</a>
+        <a href="/wayback">Wayback</a>
+        <a href="/about">About</a>
+      </div>
+    </nav>
+    <!-- <script>
+      // Set the active link and move the underline to it
+      window.onload = function () {
+        const currentPath = window.location.pathname;
+        const links = document.querySelectorAll(".navbar a");
+        const underline = document.querySelector(".navbar-underline");
+
+        links.forEach((link) => {
+          if (link.getAttribute("href") === currentPath) {
+            link.classList.add("active"); // Highlight the active link
+            const rect = link.getBoundingClientRect();
+            const navRect = document
+              .querySelector(".navbar-right")
+              .getBoundingClientRect();
+
+            underline.style.width = `${rect.width}px`;
+            underline.style.left = `${rect.left - navRect.left}px`;
+          }
+        });
+      };
+
+      // Clickable logo
+      document.getElementById("myImage").onclick = function () {
+        window.location.href = "/";
+      };
+    </script> -->
     <div class="container">
-        <div class="net_left">
-            <div class="net_form">
-                <!-- FIXED: Added id="target" -->
-                <input type="text" id="target" placeholder="Enter Domain or IP">
-                <form>
-                    <p>Select:</p>
-                    <input type="radio" id="simple" name="fav_scan" value="Simple">
-                    <label for="simple">Simple</label><br>
+      <h2>Network Enumeration Panel</h2>
+      <form id="scanForm">
+        <label for="target">Target IP / Range</label>
+        <input
+          type="text"
+          id="target"
+          required
+          placeholder="e.g. 192.168.1.0/24"
+        />
 
-                    <input type="radio" id="moderate" name="fav_scan" value="Moderate">
-                    <label for="moderate">Moderate</label><br>
+        <label for="profile">Scan Profile</label>
+        <select id="profile">
+          <option value="ping">Ping Scan</option>
+          <option value="quick" selected>Quick Scan</option>
+          <option value="intense">Intense Scan</option>
+          <option value="stealth">Stealth Scan</option>
+          <option value="custom">Custom Scan</option>
+        </select>
 
-                    <input type="radio" id="deep" name="fav_scan" value="Deep">
-                    <label for="deep">Deep</label>
-                </form>
+        <label for="customPorts">Custom Ports</label>
+        <input type="text" id="customPorts" placeholder="22,80,443 or 1-1000" />
 
-                <button onclick="scan()">Scan</button>
-            </div>
-
-            <div class="top-triangle">
-                <img src="../static/img/hollywood.gif" alt="hollywood.gif">
-            </div>
-            <div class="net_right">
-                <img src="../static/img/hollywood.gif" alt="hollywood.gif">
-            </div>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="tcpScan" checked /> TCP</label>
+          <label><input type="checkbox" id="udpScan" /> UDP</label>
         </div>
 
-        <!-- Right side: Command Interface -->
-        <div class="net_cli">
-            <textarea name="cli" id="area_cli">Command Interface</textarea>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="osDetection" /> OS Detection</label>
+          <label
+            ><input type="checkbox" id="versionDetection" /> Service Version
+            Detection</label
+          >
         </div>
-    </div>
+        <div class="checkbox-group">
+          <label
+            ><input type="checkbox" id="hostDiscovery" /> Host Discovery
+            Only</label
+          >
+          <label><input type="checkbox" id="scriptScan" /> Script Scan</label>
+        </div>
 
-    <div class="net_view">
-        <table id="scanResults">
-            <thead>
-                <!-- FIXED: Added id="tableHead" -->
-                <tr id="tableHead">
-                    <th>Port</th>
-                    <th>Service</th>
-                    <th>Status</th>
-                    <th>Version</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Results will be populated here -->
-            </tbody>
-        </table>
+        <label for="customFlags">Custom Nmap Flags</label>
+        <input type="text" id="customFlags" placeholder="-Pn -sS -T4" />
+
+        <button type="submit">Start Scan</button>
+      </form>
+
+      <div class="output">
+        <h3>Scan Output</h3>
+        <div class="output-box" >
+          <md-span >
+            <div class=""id="outputBox">
+              Awaiting scan data...
+            </div>
+          </md-span>
+          </div>
+      </div>
     </div>
 
     <script>
-        function scan() {
-            let scanType = document.querySelector('input[name="fav_scan"]:checked')?.value;
-            if (!scanType) {
-                alert("Please select a scan type.");
-                return;
-            }
+      document
+        .getElementById("scanForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
 
-            let target = document.getElementById('target').value;
-            if (!target) {
-                alert("Please enter a target (Domain or IP).");
-                return;
-            }
+          const data = {
+            target: document.getElementById("target").value,
+            profile: document.getElementById("profile").value,
+            customPorts: document.getElementById("customPorts").value,
+            tcpScan: document.getElementById("tcpScan").checked,
+            udpScan: document.getElementById("udpScan").checked,
+            osDetection: document.getElementById("osDetection").checked,
+            versionDetection:
+              document.getElementById("versionDetection").checked,
+            hostDiscovery: document.getElementById("hostDiscovery").checked,
+            scriptScan: document.getElementById("scriptScan").checked,
+            customFlags: document.getElementById("customFlags").value,
+          };
 
-            document.getElementById('area_cli').textContent = `nmap -${scanType.toLowerCase()} ${target}`;
+          const output = document.getElementById("outputBox");
+          output.textContent =
+            ">>> Sending scan config to backend...\n" +
+            JSON.stringify(data, null, 2);
 
-            document.getElementById('scanResults').setAttribute('data-scan-type', scanType);
+          // Later replace this block with actual backend call
 
-            let headers = ['Port', 'Service', 'Status', 'Version', 'Description'];
-            if (scanType === 'Moderate') {
-                headers.push('OS Discovery');
-            } else if (scanType === 'Deep') {
-                headers.push('OS Discovery', 'Script');
-            }
-
-            // Update table headers
-            let tableHead = document.getElementById('tableHead');
-            tableHead.innerHTML = '';
-            headers.forEach(header => {
-                let th = document.createElement('th');
-                th.textContent = header;
-                tableHead.appendChild(th);
+          fetch("http://localhost:5000/scan_network", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          })
+            .then((res) => res.json())
+            .then((res) => {
+              const result=marked(res.query, {breaks:true});
+              // console.log(result);
+              output.innerHTML = result;
+              // const 
+            })
+            .catch((err) => {
+              output.textContent = "Error: " + err.message;
+              console.log(err);
             });
-
-            let results = [];
-            if (scanType === "Simple") {
-                results = [
-                    { port: 80, service: "HTTP", status: "Open", version: "Apache/2.4.29", description: "Web server" },
-                    { port: 22, service: "SSH", status: "Closed", version: "-", description: "Secure shell" }
-                ];
-            } else if (scanType === "Moderate") {
-                results = [
-                    { port: 22, service: "SSH", status: "Open", version: "OpenSSH 7.6p1", description: "Secure shell", osDiscovery: "Linux" },
-                    { port: 445, service: "SMB", status: "Open", version: "Windows Server 2019", description: "File sharing", osDiscovery: "Windows" }
-                ];
-            } else if (scanType === "Deep") {
-                results = [
-                    { port: 443, service: "HTTPS", status: "Open", version: "nginx 1.14.0", description: "Secure web server", osDiscovery: "Linux", script: "CVE-2021-34527" },
-                    { port: 21, service: "FTP", status: "Open", version: "vsftpd 3.0.3", description: "File transfer", osDiscovery: "Linux", script: "CVE-2015-1415" }
-                ];
-            }
-
-            let tbody = document.querySelector("#scanResults tbody");
-            tbody.innerHTML = '';
-
-            results.forEach(result => {
-                let row = document.createElement('tr');
-                headers.forEach(header => {
-                    let td = document.createElement('td');
-
-                    let key = header
-                        .replace(/ /g, '')
-                        .replace(/Discovery/, 'osDiscovery')
-                        .replace(/Script/, 'script');
-
-                    td.textContent = result[key] || '-';
-                    row.appendChild(td);
-                });
-                tbody.appendChild(row);
-            });
-        }
-
-
+            
+            
+        });
     </script>
-    {% endblock %}
+    <script src=
+    "https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.2/marked.min.js"></script>
+  </body>
+</html>

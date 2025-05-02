@@ -5,6 +5,7 @@ import threading
 from flask import Flask, jsonify, request, render_template, Response
 import subprocess, json
 from utils.dorking import generate_dork_query, generate_ai_powered_dork # type: ignore
+from utils.networkenum import start_network_scan
 from backend import url_fuzzer
 from backend import waybackurl
 from backend import *
@@ -168,6 +169,14 @@ def fuzz_result():
 @app.route('/network_scan')
 def network_scan():
     return render_template('network_scan.html')
+@app.route('/scan_network', methods=['POST'])
+def generate_query1():
+    data = request.get_json()
+    if not isinstance(data, dict):
+        return jsonify({"error": "Invalid input format"}), 400
+    print(data)
+    result=start_network_scan(data)
+    return jsonify({"query": result})
 
 # -------------------------- Dynamic Port Selection -----------------------
 

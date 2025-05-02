@@ -1,19 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock title %}</title>
+    {% block link %}{% endblock link %}
+    <link rel="stylesheet" type="text/css" href="../static/css/netfuzzer.css" />
+    
+    <style>
+       :root {
+            --primary: #00ff88;
+            --secondary: #00ccff;
+            --dark: #1a1a1a;
+            --light: #ffffff;
+        }
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}{% endblock title %}</title>
-  <link rel="stylesheet" type="text/css" href="../static/css/subdomain.css"> 
-  <link rel="stylesheet" type="text/css" href="../static/css/netfuzzer.css">
-  <link rel="stylesheet" type="text/css" href="../static/css/urlfuzzer.css"> 
-  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
       body {
         margin: 0;
         padding: 0;
-        font-family: 'Courier New', monospace;
-        background: url('https://source.unsplash.com/1600x900/?cyberpunk,hacking,technology') no-repeat center center fixed;
+        font-family: "Courier New", monospace;
+        background: url("https://source.unsplash.com/1600x900/?cyberpunk,hacking,technology")
+          no-repeat center center fixed;
         background-size: cover;
         background: rgba(0, 0, 0, 0.8);
         color: #0f0;
@@ -21,113 +33,237 @@
       }
 
       .navbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: rgba(0, 0, 0, 0.8);
-        padding: 5px 30px;
-        box-shadow: 0 0 7px #0f0;
-        position: relative;
-      }
-
-      .navbar-left {
-        display: flex;
-        align-items: center;
-      }
-
-      .navbar-left img {
-        height: 70px;
-        margin-right: 10px;
-        cursor: pointer;
-      }
-
-      .navbar-right {
-        display: flex;
-        position: relative;
-        /* padding-bottom: 10x; */
-        align-items: flex-end;
-      }
-
-      .navbar a {
-        color: #0f0;
-        text-decoration: none;
-        padding: 5px 15px;
-        margin: 0 5px;
-        font-weight: bold;
-        transition: 0.3s;
-        position: relative;
-        z-index: 2;
-        margin-bottom: -30px;
-      }
-
-      .navbar a:hover {
-        color: #fff;
-        text-shadow: 0 0 7px #0f0;
-      }
-
-    .navbar-underline {
-      position: absolute;
-      bottom: -40px;
-      left: 0;
-      height: 40px;
-      background: linear-gradient(to top, rgba(0, 255, 0, 1), rgba(0, 255, 0, 0));
-      transition: all 1s ease;
-      width: 0;
-      z-index: 1;
-    }
-    
-
-
-
-  </style>
-</head>
-
-<body>
-  <nav class="navbar">
-    <div class="navbar-left">
-      <img src="../static/img/logo1.png" id="myImage" alt="logo">
-    </div>
-    <div class="navbar-right">
-      <a href="/subdomain_enum">Subdomain_Enum</a>
-      <a href="/network_scan">Network_Fuzzer</a>
-      <a href="/url_fuzzer">URL_Fuzzer</a>
-      <a href="/dorking">Google_Dorking</a>
-      <a href="/wayback">Wayback</a>
-      <a href="/about">About</a>
-      <div class="navbar-underline"></div>
-    </div>
-  </nav>
-  <script>
-    // Set the active link and move the underline to it
-    window.onload = function () {
-      const currentPath = window.location.pathname;
-      const links = document.querySelectorAll('.navbar a');
-      const underline = document.querySelector('.navbar-underline');
-
-      links.forEach(link => {
-        if (link.getAttribute('href') === currentPath) {
-          link.classList.add('active'); // Highlight the active link
-          const rect = link.getBoundingClientRect();
-          const navRect = document.querySelector('.navbar-right').getBoundingClientRect();
-
-          underline.style.width = `${rect.width}px`;
-          underline.style.left = `${rect.left - navRect.left}px`;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 1rem 2rem;
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 255, 136, 0.1);
+            transition: all 0.3s ease;
         }
-      });
-    };
 
-    // Clickable logo
-    document.getElementById("myImage").onclick = function () {
-      window.location.href = "/";
-    };
-  </script>
+        .navbar:hover {
+            background: rgba(0, 0, 0, 0.95);
+        }
 
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
 
-  <div class="main_container">
-    {% block content %}
+        .navbar-left img {
+            height: 45px;
+            margin-right: 1rem;
+            transition: transform 0.3s ease;
+        }
 
-    {% endblock content %}
-  </div>
-</body>
+        .navbar-left img:hover {
+            transform: scale(1.05);
+        }
 
+        .navbar-right {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: var(--light);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: var(--primary);
+        }
+
+        .navbar a:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        @media (max-width: 1024px) {
+            .main {
+                padding: 7rem 3rem 3rem;
+                gap: 2rem;
+            }
+            
+            #heading {
+                font-size: 2.8rem;
+            }
+
+            .navbar {
+                padding: 1rem;
+            }
+
+            .navbar a {
+                font-size: 0.9rem;
+                padding: 0.5rem 0.75rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main {
+                flex-direction: column;
+                text-align: center;
+                padding: 6rem 2rem 2rem;
+            }
+
+            .navbar {
+                padding: 1rem;
+            }
+
+            .navbar-right {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                height: 100vh;
+                width: 100%;
+                max-width: 300px;
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                justify-content: center;
+                gap: 2rem;
+                padding: 2rem;
+                transition: right 0.3s ease;
+            }
+
+            .navbar-right.active {
+                right: 0;
+            }
+
+            .navbar a {
+                font-size: 1.1rem;
+                width: 100%;
+                text-align: center;
+            }
+
+            .navbar a::before {
+                display: none;
+            }
+
+            .navbar a::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 0;
+                height: 2px;
+                background: linear-gradient(90deg, var(--primary), var(--secondary));
+                transition: width 0.3s ease;
+            }
+
+            .navbar a:hover::after {
+                width: 100%;
+            }
+            .mobile-menu-btn {
+                display: flex;
+            }
+          }
+          .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1001;
+        }
+
+        .mobile-menu-btn span {
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: translateY(9.5px) rotate(45deg);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: translateY(-9.5px) rotate(-45deg);
+        }
+
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="navbar-left">
+          <img src="../static/img/logo1.png" id="myImage" alt="ScanXpert Logo">
+      </div>
+      <button class="mobile-menu-btn">
+          <span></span>
+          <span></span>
+          <span></span>
+      </button>
+      <div class="navbar-right">
+        <a href="/subdomain_enum">Subdomain_Enum</a>
+        <a href="/network_scan">Network_Fuzzer</a>
+        <a href="/url_fuzzer">URL_Fuzzer</a>
+        <a href="/dorking">Google_Dorking</a>
+        <a href="/wayback">Wayback</a>
+        <a href="/about">About</a>
+      </div>
+  </nav>
+    <script>
+      // Set the active link and move the underline to it
+      window.onload = function () {
+        const currentPath = window.location.pathname;
+        const links = document.querySelectorAll(".navbar a");
+        const underline = document.querySelector(".navbar-underline");
+
+        links.forEach((link) => {
+          if (link.getAttribute("href") === currentPath) {
+            link.classList.add("active"); // Highlight the active link
+            const rect = link.getBoundingClientRect();
+            const navRect = document
+              .querySelector(".navbar-right")
+              .getBoundingClientRect();
+
+            underline.style.width = `${rect.width}px`;
+            underline.style.left = `${rect.left - navRect.left}px`;
+          }
+        });
+      };
+
+      // Clickable logo
+      document.getElementById("myImage").onclick = function () {
+        window.location.href = "/";
+      };
+    </script>
+
+    <div class="main_container">{% block content %} {% endblock content %}</div>
+  </body>
 </html>
