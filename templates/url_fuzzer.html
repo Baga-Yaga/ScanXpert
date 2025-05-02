@@ -1,0 +1,158 @@
+    {% extends "basetemplate.html" %}
+    {% block title %} URL Fuzzer {% endblock title %}
+    <link rel="stylesheet" type="text/css" href="../static/css/urlfuzzer.css"> 
+
+    {% block content %}
+    <!-- templates/url_fuzzer.html -->
+        <div class="container">
+            <div class="sidebar">
+                <h2>URL Fuzzer</h2>
+                <form id="fuzzForm">
+                    <label for="domain">Enter Domain:</label>
+                    <input type="text" id="domain" name="domain" required placeholder="https://example.com">
+                    <label>Scan Type:</label>
+                    <select id="scanType" name="scanType">
+                        <option value="1">Simple</option>
+                        <option value="2">Moderate</option>
+                        <option value="3">Recursive</option>
+                    </select>
+                    <button type="submit">Scan</button>    
+                </form>
+                <button id="clearBtn" class="btn btn-danger mt-3">Clear Results</button>
+            </div>
+
+            <div class="main">
+                <div class="progress">
+                    <label>Scan Progress</label>
+                    <div id="progressContainer">
+                        <progress id="progressBar" value="0" max="100"></progress>
+                        </div><br>
+                        <span id="progressText">0%</span>
+                </div>
+
+                <table id="resultTable">
+                    <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>Status Code</th>
+                            <th>Response</th>
+                            <th>Size (bytes)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="consoleResult"></tbody>
+                </div>
+            </table>    
+            <div id="paginationControls" style="margin-top: 20px; text-align: center;">
+            <button id="prevPage" disabled>Previous</button>
+            <span id="pageInfo">Page 0</span>
+            <button id="nextPage">Next</button>
+            </div>
+        </div>
+
+        <script>
+            let allResults = [];
+            let currentPage = 1;
+            const resultsPerPage = 20; 
+        
+            function renderPage(page) {
+                const tbody = document.querySelector('#resultTable tbody');
+                tbody.innerHTML = '';
+                const startIndex = (page - 1) * resultsPerPage;
+                const endIndex = startIndex + resultsPerPage;
+                const pageResults = allResults.slice(startIndex, endIndex);
+        
+                pageResults.forEach(row => {
+                    const tr = document.createElement('tr');
+                    row.forEach((col, index) => {
+                        const td = document.createElement('td');
+                        if (index === 0) {
+                            const a = document.createElement('a');
+                            a.href = col;
+                            a.target = "_blank";
+                            a.textContent = col;
+                            td.appendChild(a);
+                        } else {
+                            td.textContent = col;
+                        }
+                        tr.appendChild(td);
+                    });
+                    tbody.appendChild(tr);
+                });
+        
+                // Update page info
+                const pageInfo = document.getElementById("pageInfo");
+                const totalPages = Math.ceil(allResults.length / resultsPerPage);
+                pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+        
+                // Enable/disable buttons
+                document.getElementById("prevPage").disabled = currentPage === 1;
+                document.getElementById("nextPage").disabled = currentPage === totalPages;
+            }
+        
+            document.getElementById('fuzzForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const domain = document.getElementById('domain').value;
+                const type = document.getElementById('scanType').value;
+        
+                document.getElementById('progressBar').value = 0;
+                document.getElementById('progressText').textContent = '0%';
+        
+                const res = await fetch('/start_url_fuzzer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ domain, type })
+                });
+        
+                const data = await res.json();
+                if (data.status === 'started') {
+                    const interval = setInterval(async () => {
+                        const progRes = await fetch('/fuzz_progress?domain=' + encodeURIComponent(domain));
+                        const prog = await progRes.json();
+                        document.getElementById('progressBar').value = prog.progress;
+                        document.getElementById('progressText').textContent = `${prog.progress}%`;
+        
+                        if (prog.progress >= 100) {
+                            clearInterval(interval);
+        
+                            // Fetch final results
+                            const finalRes = await fetch('/fuzz_result?domain=' + encodeURIComponent(domain));
+                            const resultData = await finalRes.json();
+                            allResults = resultData.results || [];
+                            currentPage = 1;
+                            renderPage(currentPage);
+                        }
+                    }, 1500);
+                }
+            });
+        
+            document.getElementById("clearBtn").addEventListener("click", function () {
+                document.getElementById("progressText").textContent = "0%";
+                document.getElementById("progressBar").value = "0";
+                document.getElementById("consoleResult").innerHTML = "";
+                document.getElementById("pageInfo").textContent = "Page 0";
+                allResults = [];
+                currentPage = 1;
+            });
+        
+            document.getElementById("prevPage").addEventListener("click", () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderPage(currentPage);
+                }
+            });
+        
+            document.getElementById("nextPage").addEventListener("click", () => {
+                const totalPages = Math.ceil(allResults.length / resultsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderPage(currentPage);
+                }
+            });
+        </script>
+        
+    </body>
+    </html>
+
+    {% endblock content %}

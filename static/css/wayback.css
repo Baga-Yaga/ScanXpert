@@ -1,0 +1,77 @@
+.container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.sidebar {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar input,
+.sidebar button {
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+.filters button {
+    margin: 4px 2px;
+    padding: 5px 10px;
+}
+
+.main {
+    flex: 1;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding: 0 10px;
+}
+
+#prevBtn, #nextBtn {
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#pageInfo {
+    text-align: center;
+    flex: 1;
+    font-weight: bold;
+}
+.status-code {
+    font-weight: bold;
+}
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.status-2 { color: #4CAF50; }  /* 2xx success */
+.status-3 { color: #FFC107; }  /* 3xx redirect */
+.status-4 { color: #F44336; }  /* 4xx client error */
+.status-5 { color: #9C27B0; }  /* 5xx server error */

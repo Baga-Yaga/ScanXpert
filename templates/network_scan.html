@@ -1,98 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "basetemplate.html" %}
+{% block title %}Network_Fuzzer{% endblock %}
+{% block head %}
+{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Scanner</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/netfuzzer.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Courier New', monospace;
-            background: url('https://source.unsplash.com/1600x900/?cyberpunk,hacking,technology') no-repeat center center fixed;
-            background-size: cover;
-            background: rgba(0, 0, 0, 0.8);
-            color: #0f0;
-            text-shadow: 0 0 2px #0f0;
-        }
-
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 5px 30px;
-            box-shadow: 0 0 7px #0f0;
-            position: relative;
-        }
-
-        .navbar-left {
-            display: flex;
-            align-items: center;
-        }
-
-        .navbar-left img {
-            height: 70px;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-
-        .navbar-right {
-            display: flex;
-            position: relative;
-            /* padding-bottom: 10x; */
-            align-items: flex-end;
-        }
-
-        .navbar a {
-            color: #0f0;
-            text-decoration: none;
-            padding: 5px 15px;
-            margin: 0 5px;
-            font-weight: bold;
-            transition: 0.3s;
-            position: relative;
-            z-index: 2;
-            margin-bottom: -30px;
-        }
-
-        .navbar a:hover {
-            color: #fff;
-            text-shadow: 0 0 7px #0f0;
-        }
-
-        .navbar-underline {
-            position: absolute;
-            bottom: -40px;
-            left: 0;
-            height: 40px;
-            background: linear-gradient(to top, rgba(0, 255, 0, 1), rgba(0, 255, 0, 0));
-            transition: all 1s ease;
-            width: 0;
-            z-index: 1;
-        }
-    </style>
-</head>
-
-<body>
-    <nav class="navbar">
-        <div class="navbar-left">
-            <img src="../static/img/logo1.png" id="myImage" alt="logo">
-        </div>
-        <div class="navbar-right">
-            <a href="/dashboard">Dashboard</a>
-            <a href="/subdomain_enum">Subdomain_Enum</a>
-            <a href="/network_scan">Network_Fuzzer</a>
-            <a href="/url-fuzzer">URL_Fuzzer</a>
-            <a href="/dorking">Google_Dorking</a>
-            <a href="/bug-scanner">Bug_Scanner</a>
-            <a href="/Wayback">Wayback</a>
-            <a href="/about">About</a>
-            <div class="navbar-underline"></div>
-        </div>
-    </nav>
+{% block content %}
     <div class="container">
         <div class="net_left">
             <div class="net_form">
@@ -219,6 +130,4 @@
 
 
     </script>
-</body>
-
-</html>
+    {% endblock %}

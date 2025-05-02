@@ -1,9 +1,12 @@
+import datetime
 import os
 import socket
+import threading
 from flask import Flask, jsonify, request, render_template, Response
 import subprocess, json
-from utils.dorking import generate_dork_query, generate_ai_powered_dork
-
+from utils.dorking import generate_dork_query, generate_ai_powered_dork # type: ignore
+from backend import url_fuzzer
+from backend import waybackurl
 from backend import *
 from flask_cors import CORS # type: ignore
 
@@ -108,25 +111,57 @@ def generate_ai_query():
     return jsonify({"query": query})
 
 # -------------------------- Wayback URL Fetching -----------------------
-
-@app.route('/Wayback')
-def Wayback():
+@app.route('/wayback')
+def wayback_page():
     return render_template('wayback.html')
 
-@app.route('/fetch_wayback', methods=['POST'])
-def fetch_wayback():
-    domain = request.form.get('domain')
+@app.route('/scan', methods=['POST'])
+def scan():
+    data = request.get_json()
+    domain = data.get('domain')
     if not domain:
         return jsonify({"error": "No domain provided"}), 400
+    
+    results = waybackurl.getallurls(domain)
+    return jsonify(results)
 
-    try:
-        result = subprocess.run(
-            ["python3", "backend/wayback.py", domain],
-            capture_output=True, text=True, check=True
-        )
-        return jsonify({'output': result.stdout})
-    except subprocess.CalledProcessError as e:
-        return jsonify({'error': e.stderr}), 500
+@app.route('/filter', methods=['POST'])
+def filter_mode():
+    data = request.get_json()
+    domain = data.get('domain')
+    mode = data.get('mode')
+    
+    if not domain or not mode:
+        return jsonify({"error": "Missing domain or mode"}), 400
+
+    results = waybackurl.filter_urls(mode, domain)
+    return jsonify(results)
+    
+# -------------------------- URL Fuzzer -----------------------
+@app.route('/url_fuzzer')
+def url_fuzzer_page():
+    return render_template('url_fuzzer.html')
+
+@app.route('/start_url_fuzzer', methods=['POST'])
+def start_url_fuzzer():
+    data = request.get_json()
+    domain = data['domain']
+    scan_type = int(data['type'])
+
+    url_fuzzer.run_url_fuzzer(domain, scan_type)
+    return jsonify({'status': 'started'})
+
+@app.route('/fuzz_progress')
+def fuzz_progress():
+    domain = request.args.get('domain')
+    progress = url_fuzzer.get_progress(domain)
+    return jsonify({'progress': progress})
+
+@app.route('/fuzz_result')
+def fuzz_result():
+    domain = request.args.get('domain')
+    results = url_fuzzer.parse_csv_results(domain)
+    return jsonify({'results': results})
 
 # -------------------------- Network Scanning -----------------------
 
