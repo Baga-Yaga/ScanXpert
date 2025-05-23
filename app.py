@@ -193,3 +193,11 @@ if __name__ == '__main__':
     port = find_available_port(5000)
     print(f"Starting Flask server on port {port}...")
     app.run(host='0.0.0.0', port=port, debug=True)
+
+
+
+
+#---------------------------About---------------------------
+@app.route('/about')
+def about():
+    return render_template('about.html')

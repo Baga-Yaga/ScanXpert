@@ -1,0 +1,57 @@
+{% extends "basetemplate.html" %}
+{% block title %}About Us - ScanExpert{% endblock title %}
+{% block link %}
+<link rel="stylesheet" type="text/css" href="../static/css/about.css">
+{% endblock link %}
+
+{% block content %}
+<div class="outer-container" style="margin-top: 7rem;">
+  <div class="left-panel" style="width: 100%;">
+    <h2>About ScanExpert</h2>
+    <p>
+      <strong>ScanExpert</strong> is a modular reconnaissance framework built using <strong>Python Flask</strong>. It simplifies and accelerates the reconnaissance phase in cybersecurity assessments by offering a suite of powerful tools in one platform.
+    </p>
+    <p>Our key modules include:</p>
+    <ul>
+      <li>🔍 <strong>Subdomain Enumeration</strong> – Find hidden subdomains</li>
+      <li>🕸️ <strong>Wayback Lookup</strong> – Analyze historical web data</li>
+      <li>📡 <strong>Network Fuzzer</strong> – Port scanning using Nmap</li>
+      <li>🧪 <strong>URL Fuzzer</strong> – Fuzz endpoints and parameters</li>
+      <li>🔎 <strong>Google Dork</strong> – Search engine exploitation</li>
+    </ul>
+    <p>
+      ScanExpert is built with the aim of providing security researchers with a seamless, fast, and customizable platform for reconnaissance and data gathering.
+    </p>
+
+    <hr style="margin: 2rem 0;">
+
+    <h3>Meet the Team</h3>
+    <div class="team-container">
+      <div class="team-member">
+        <img src="../static/images/sami.jpg" alt="Sami" class="member-img">
+        <h4>Sami</h4>
+        <p><strong>Full Stack Developer</strong></p>
+        <p>A professional developer with expertise in both frontend and backend development. Sami ensures ScanExpert is fast, scalable, and secure.</p>
+      </div>
+      <div class="team-member">
+        <img src="../static/images/arron.jpg" alt="Arron" class="member-img">
+        <h4>Arron</h4>
+        <p><strong>Cybersecurity Expert</strong></p>
+        <p>With a deep knowledge of vulnerabilities and exploits, Arron contributed to building the Subdomain and Dorking modules.</p>
+      </div>
+      <div class="team-member">
+        <img src="../static/images/amar.jpg" alt="Amar" class="member-img">
+        <h4>Amar</h4>
+        <p><strong>Network Security Analyst</strong></p>
+        <p>Focused on secure network scanning, Amar integrated the Nmap-based Network Fuzzer for deep reconnaissance.</p>
+      </div>
+      <div class="team-member">
+        <img src="../static/images/om.jpg" alt="Om" class="member-img">
+        <h4>Om</h4>
+        <p><strong>UI/UX Designer</strong></p>
+        <p>Om designed the clean and responsive user interface, ensuring ScanExpert is intuitive and visually appealing.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
