@@ -15,7 +15,7 @@ else
 fi
 
 # Output directories
-OUTPUT_DIR="/home/reaper/Desktop/ScanXpert/backend/reports/$OUTDOMAIN"
+OUTPUT_DIR="/home/wolf/Desktop/code/ScanXpert/backend/reports/$OUTDOMAIN"
 mkdir -p "$OUTPUT_DIR"
 
 # Temporary files

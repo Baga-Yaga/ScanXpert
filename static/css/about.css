@@ -1,34 +1,86 @@
-.outer-container {
-  padding: 2rem;
-  background-color: #f9f9f9;
-  border-radius: 1rem;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Courier New', monospace;
+  background: url('https://media.giphy.com/media/BzyTuYCmvSORqs1ABM/giphy.gif') no-repeat center center fixed;
+  background-size: cover;
+  color: #0f0;
+  text-shadow: 0 0 5px #0f0;
 }
 
-.left-panel h2, .left-panel h3 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
+.outer-container {
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.85); 
+  border-radius: 1rem;
+  box-shadow: 0 0 20px #0f0;
+  max-width: 90%;
+  margin: 5rem auto;
+  animation: fadeIn 2s ease-in-out;
+}
+
+h2, h3, h4 {
+  text-align: center;
+  text-shadow: 0 0 10px #0f0;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+ul li::before {
+  content: "▣ ";
+  color: #0f0;
 }
 
 .team-container {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
-  justify-content: space-evenly;
+  justify-content: center;
+  margin-top: 2rem;
 }
 
 .team-member {
-  background-color: #ffffff;
+  background: rgba(10, 10, 10, 0.9);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 15px #0f0;
+  padding: 1.5rem;
   border-radius: 1rem;
-  padding: 1rem;
-  max-width: 250px;
+  max-width: 240px;
   text-align: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  transition: all 0.3s ease-in-out;
+  position: relative;
+}
+
+.team-member:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px #00ff99;
 }
 
 .member-img {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0f0;
   margin-bottom: 1rem;
+  box-shadow: 0 0 10px #0f0;
+}
+
+p {
+  color: #0f0;
+  line-height: 1.5;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #0f0;
+  box-shadow: 0 0 5px #0f0;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
 }

@@ -163,7 +163,9 @@ def fuzz_result():
     domain = request.args.get('domain')
     results = url_fuzzer.parse_csv_results(domain)
     return jsonify({'results': results})
-
+@app.route('/about')
+def about():
+    return render_template('about.html')
 # -------------------------- Network Scanning -----------------------
 
 @app.route('/network_scan')
@@ -198,6 +200,3 @@ if __name__ == '__main__':
 
 
 #---------------------------About---------------------------
-@app.route('/about')
-def about():
-    return render_template('about.html')
